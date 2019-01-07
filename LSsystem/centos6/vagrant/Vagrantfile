@@ -4,38 +4,23 @@ Vagrant.configure(version) do |config|
 
   config.vm.define :teacher do | teacher |
     teacher.vm.hostname = "teacher"
-    teacher.vm.network "forwarded_port", guest: 22, host:2222
-    teacher.vm.network "forwarded_port", guest: 29418, host: 29419
-    teacher.vm.network "forwarded_port", guest: 80, host: 8084
-    teacher.vm.network "forwarded_port", guest: 8080, host: 8085
-    teacher.vm.network "forwarded_port", guest: 5000, host: 5004
+    teacher.vm.network "forwarded_port", guest: 80, host: 8080
+    teacher.vm.network "forwarded_port", guest: 8080, host: 8081
+    teacher.vm.network "forwarded_port", guest: 5000, host: 5001
     teacher.vm.network "forwarded_port", guest: 27017, host: 27018
+    teacher.vm.network "forwarded_port", guest: 29418, host: 29419
     teacher.vm.network :public_network, :bridge => "en0: Wi-Fi (AirPort)"
-    teacher.vm.synced_folder "src", "/home/vagrant/src", owner: "vagrant", group: "vagrant"
-    teacher.vm.provision "shell", path: "teacher_init.sh"
+    teacher.vm.network "private_network", ip: "192.168.33.10", virtualbox__intnet: "net1"
+    teacher.vm.synced_folder "src/teacher", "/src", owner: "vagrant", group: "vagrant"
+    #teacher.vm.provision "shell", path: "teacher_init.sh"
+    teacher.ssh.private_key_path = "~/.ssh/id_rsa"
   end
 
   config.vm.define :student00 do | student00 |
     student00.vm.hostname = "student00"
-    student00.vm.network "forwarded_port", guest: 22, host:2223
-    student00.vm.network :private_network, ip: "192.168.33.10", virtualbox__intnet: "intnet"
-    student00.vm.synced_folder "src", "/home/vagrant/src", owner: "vagrant", group: "vagrant"
-    student00.vm.provision "shell", path: "student_init.sh"
-  end
-
-  config.vm.define :student01 do | student01 |
-    student01.vm.hostname = "student01"
-    student01.vm.network "forwarded_port", guest: 22, host:2224
-    student01.vm.network :private_network, ip: "192.168.33.20", virtualbox__intnet: "intnet"
-    student01.vm.synced_folder "src", "/home/vagrant/src", owner: "vagrant", group: "vagrant"
-    student01.vm.provision "shell", path: "student_init.sh"
-  end
-
-  config.vm.define :student02 do | student02 |
-    student02.vm.hostname = "student02"
-    student02.vm.network "forwarded_port", guest: 22, host:2225
-    student02.vm.network :private_network, ip: "192.168.33.30", virtualbox__intnet: "intnet"
-    student02.vm.synced_folder "src", "/home/vagrant/src", owner: "vagrant", group: "vagrant"
-    student02.vm.provision "shell", path: "student_init.sh"
+    student00.vm.network "private_network", ip: "192.168.33.20", virtualbox__intnet: "net1"
+    student00.vm.synced_folder "src/student", "/src", owner: "vagrant", group: "vagrant"
+    #student00.vm.provision "shell", path: "student_init.sh"
+    student00.ssh.private_key_path = "~/.ssh/id_rsa"
   end
 end
