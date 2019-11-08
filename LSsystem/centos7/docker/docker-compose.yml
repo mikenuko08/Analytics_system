@@ -1,0 +1,50 @@
+version: "3"
+services:
+  logger_server:
+    build: logger_server/.
+    image: logger_server
+    hostname: logger_server
+    container_name: logger_server
+    tty: true
+    privileged: true
+    volumes:
+      - ./logs/logger_log/log/:/var/log/
+      - ./logs/logger_log/home/:/home/
+      - ./logs/logger_log/git/:/git/
+    ports:
+      - "22001:22"
+  collect_server:
+    build: collect_server/.
+    image: collect_server
+    hostname: collect_server
+    container_name: collect_server
+    tty: true
+    privileged: true
+    volumes:
+      - ./logs/collect_log/log/:/var/log/
+      - ./logs/collect_log/git/:/git/
+      - ./collect_server/log_collect/:/home/log_collect
+    ports:
+      - "22002:22"
+      - "5001:5000"
+  mongo:
+    image: mongo
+    restart: always
+    hostname: mongo
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - ./logs/mongo_db:/data/db
+    ports:
+      - "27017:27017"
+  httpd:
+    image: httpd
+    restart: always
+    hostname: httpd
+    container_name: httpd
+    volumes:
+      - ./web/Viewer/Visualize:/usr/local/apache2/htdocs/
+    ports:
+      - "8080:80"

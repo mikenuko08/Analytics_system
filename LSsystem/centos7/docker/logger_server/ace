@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# ref:https://qiita.com/katoy/items/c0d9ff8aff59efa8fcbb
+realpath ()
+{
+    f=$@;
+    if [ -d "$f" ]; then
+        base="";
+        dir="$f";
+    else
+        base="/$(basename "$f")";
+        dir=$(dirname "$f");
+    fi;
+    dir=$(cd "$dir" && /bin/pwd);
+    echo "$dir$base"
+}
+
+file=$1
+if [ -e ${file} ]; then
+  echo "[[ace]] will open $(realpath $1)"
+else
+  echo "${file} not found"
+fi
