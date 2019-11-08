@@ -2,22 +2,17 @@ echo "Provision teacher_vm"
 echo "Step1: Update yum repository"
 sudo yum -y update
 
-echo "Step2: Add epel repository"
-sudo yum -y epel-release
+echo "Step2: Add epel-repository and ius-repository"
+sudo yum -y install epel-release
+sudo yum -y install https://centos6.iuscommunity.org/ius-release.rpm
 
 echo "Step3: Install necessary software"
-sudo yum -y install java-1.8.0-openjdk-devel gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker
+sudo yum -y install java-1.8.0-openjdk-devel gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker python36*
 
-echo "Step4: Install git (version >=2.4.0)"
-wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.4.0.tar.gz
-tar -zxvf git-2.4.0.tar.gz
-sudo mv git-2.4.0/ /
-rm -rf git-2.4.0.tar.gz
-cd /git-2.4.0
-sudo ./configure --prefix=/usr/local
-make
-sudo make install
-git -version
+echo "Step4: Install git (version >=2.2.0)"
+# git install
+yum install -y wget gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker
+wget https://www.kernel.org/pub/software/scm/git/git-2.2.0.tar.gz && tar -zxf git-2.2.0.tar.gz && cd git-2.2.0 && make prefix=/usr/local all && make prefix=/usr/local install
 # sudo visudoコマンドでsource_pathに/usr/local/bin/を追記
 # 時間があれば，sedコマンドでできるようにする．
 
@@ -34,18 +29,21 @@ echo "Step5: Mongodb configuration"
 # enabled=1
 # gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 # ----------------
-#
+# 
+sudo cp /vagrant/src/teacher/mongodb-org-3.4.repo /etc/yum.repos.d/
+
 # 2. Install the MongoDB packages and associated tools.
-# sudo yum install -y mongodb-org
+sudo yum install -y mongodb-org
 # 
 # Run MongoDB Community Edition
 # 1. Start MongoDB
-# sudo service mongod start
+sudo service mongod start
 # 2. Verify that MongoDB has started successfully
 # 3. Stop MongoDB
 # sudo service mongodb stop
 # 4. Restart MongoDB
 # sudo service mongodb restart
+sudo chkconfig mongod on
 
 echo "Step6: Apache configuration"
 sudo yum -y install httpd
@@ -103,3 +101,14 @@ sudo mv gitbucket.war /var/lib/tomcat/webapps/
 # sudo vim /usr/share/tomcat/.gitbucket/gitbucket.conf
 # sshの公開鍵の登録がコマンドから行えるかが現状わからないため，
 # とりあえず，手動で設定する．
+
+echo "Step10: Python3 configuration"
+sudo ln -s /usr/bin/python3.6 /usr/bin/python3
+sudo ln -s /usr/bin/pip3.6 /usr/bin/pip3
+sudo pip3 install fabric
+sudo pip3 install pandas
+sudo pip3 install flask
+sudo pip3 install flask-bootstrap
+sudo pip3 install flask-pymongo
+sudo pip3 install python-dateutil
+
