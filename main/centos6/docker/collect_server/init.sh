@@ -20,9 +20,9 @@ init
 
 cat <<EOF >>~/.bashrc
 function TERMINATE {
-    systemctl stop rsyslog
-    systemctl stop sshd
-    systemctl stop lsyncd
+    service rsyslog stop
+    service sshd stop
+    service lsyncd stop
     echo "container terminate" >> /var/log/docker_container
     date >> /var/log/docker_container
 }

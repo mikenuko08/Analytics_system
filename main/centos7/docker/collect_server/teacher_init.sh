@@ -4,7 +4,7 @@ sudo yum -y update
 
 echo "Step2: Add epel-repository and ius-repository"
 sudo yum -y install epel-release
-sudo yum -y install https://centos6.iuscommunity.org/ius-release.rpm
+sudo yum -y install https://centos7.iuscommunity.org/ius-release.rpm
 
 echo "Step3: Install necessary software"
 sudo yum -y install java-1.8.0-openjdk-devel gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker python36*
@@ -37,25 +37,25 @@ sudo yum install -y mongodb-org
 # 
 # Run MongoDB Community Edition
 # 1. Start MongoDB
-sudo service mongod start
+sudo systemctl enable mongod.service 
 # 2. Verify that MongoDB has started successfully
 # 3. Stop MongoDB
 # sudo service mongodb stop
 # 4. Restart MongoDB
 # sudo service mongodb restart
-sudo chkconfig mongod on
+# sudo chkconfig mongod on
 
 echo "Step6: Apache configuration"
 sudo yum -y install httpd
-sudo service httpd start
-sudo chkconfig httpd on
-sudo service httpd status
+sudo systemctl start httpd.service
+# sudo chkconfig httpd on
+sudo systemctl status httpd.service
 
 echo "Step7: Tomcat7 configuration"
 sudo yum -y install tomcat tomcat-webapps
-sudo service tomcat start
-sudo chkconfig tomcat on
-sudo service tomcat status
+sudo systemctl tomcat.service start
+# sudo chkconfig tomcat on
+sudo systemctl status tomcat.service
 
 echo "Step8: Link Apache and Tomcat7"
 echo "Please execute the following command"

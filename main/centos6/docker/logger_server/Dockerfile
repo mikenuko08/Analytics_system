@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:6
 
 # update yum package
 RUN yum update -y
@@ -40,7 +40,7 @@ COPY ./lsyncd.conf /etc/
 RUN mkdir -p /etc/lsyncd_exclude
 COPY ./lsyncd_exclude/*.list /etc/lsyncd_exclude/
 RUN mkdir -p /var/log/lsyncd
-RUN systemctl enable lsyncd.service
+RUN service lsyncd start
 
 # git setting
 RUN mkdir /git

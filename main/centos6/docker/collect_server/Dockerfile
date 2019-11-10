@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:6
 
 # update yum package
 RUN yum update -y
@@ -6,8 +6,8 @@ RUN yum update -y
 # change UTC to JST
 RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
-# install ssh and rsys
-RUN yum install -y openssh-server rsyslog
+# install ssh and rsys and java
+RUN yum install -y openssh-server rsyslog java-1.8.0-openjdk-devel
 RUN sed -i -e "s/#MaxStartups 10:30:100/MaxStartups 10:30:100/g" /etc/ssh/sshd_config
 RUN sed -i -e "s/PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ssh/sshd_config
 RUN sed -i -e "s/#PubkeyAuthentication yes/PubkeyAuthentication yes/g" /etc/ssh/sshd_config
@@ -21,8 +21,14 @@ RUN yum -y install gcc curl-devel expat-devel gettext-devel openssl-devel zlib-d
 RUN wget https://www.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz
 RUN tar vfx git-2.9.5.tar.gz;cd git-2.9.5;make configure;./configure --prefix=/usr/local;make all;make prefix=/usr/local install
 
+# git setting
+RUN mkdir /git
+RUN /usr/local/bin/git -C /git init
+RUN /usr/local/bin/git -C /git config user.name staff
+RUN /usr/local/bin/git -C /git config user.email staff@softiv.info
+
 # python3.6 install
-RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm
+RUN yum install -y https://centos6.iuscommunity.org/ius-release.rpm
 RUN yum install -y python36u python36u-libs python36u-devel python36u-pip
 
 #python3.6 configuration"
@@ -34,12 +40,6 @@ RUN pip3 install flask
 RUN pip3 install flask-bootstrap
 RUN pip3 install flask-pymongo
 RUN pip3 install python-dateutil
-
-# git setting
-RUN mkdir /git
-RUN /usr/local/bin/git -C /git init
-RUN /usr/local/bin/git -C /git config user.name staff
-RUN /usr/local/bin/git -C /git config user.email staff@softiv.info
 
 RUN echo "export LANG=ja_JP.UTF-8" > /etc/profile.d/setlang.sh
 RUN chmod 644 /etc/profile.d/setlang.sh
