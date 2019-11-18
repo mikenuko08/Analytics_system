@@ -28,7 +28,7 @@ RUN /usr/local/bin/git -C /git config user.name staff
 RUN /usr/local/bin/git -C /git config user.email staff@softiv.info
 
 # python3.6 install
-RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm
+RUN yum install -y https://centos6.iuscommunity.org/ius-release.rpm
 RUN yum install -y python36u python36u-libs python36u-devel python36u-pip
 
 #python3.6 configuration"
