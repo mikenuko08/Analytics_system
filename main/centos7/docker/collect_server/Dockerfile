@@ -26,8 +26,8 @@ RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm
 RUN yum install -y python36u python36u-libs python36u-devel python36u-pip
 
 #python3.6 configuration"
-RUN ln -s /usr/bin/python3.6 /usr/bin/python3
-RUN ln -s /usr/bin/pip3.6 /usr/bin/pip3
+# RUN ln -s /usr/bin/python3.6 /usr/bin/python3
+# RUN ln -s /usr/bin/pip3.6 /usr/bin/pip3
 RUN pip3 install fabric
 RUN pip3 install pandas
 RUN pip3 install flask

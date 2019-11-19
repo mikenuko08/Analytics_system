@@ -24,6 +24,7 @@ services:
       - ./logs/collect_log/log/:/var/log/
       - ./logs/collect_log/git/:/git/
       - ./collect_server/log_collect/:/home/log_collect
+      - ./collect_server/web/:/home/web
     ports:
       - "22002:22"
       - "5001:5000"
