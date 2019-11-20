@@ -1,11 +1,11 @@
 #!/bin/sh
 
-# first(){
-#     echo "The following procedure is invoked only once"
-#     cp -a /root/data/log/ /var/
-#     cp -a /root/data/home/ /
-#     cp -a /root/data/git/ /
-# }
+first(){
+    echo "The following procedure is invoked only once"
+    cp -a /root/data/log/ /var/
+    cp -a /root/data/home/ /home/
+    cp -a /root/data/git/ /git/
+}
 
 init(){
     echo "The following procedure is always invoked"
@@ -13,9 +13,10 @@ init(){
     date >> /var/log/container
 }
 
-# if [ ! -r /var/log/container ] ; then
-#     first
-# fi
+if [ ! -r /var/log/container ] ; then
+    first
+    systemctl enable lsyncd.service
+fi
 
 init
 

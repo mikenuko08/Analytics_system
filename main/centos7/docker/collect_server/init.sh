@@ -3,8 +3,8 @@
 first(){
     echo "The following procedure is invoked only once"
     cp -a /root/data/log/ /var/
-    cp -a /root/data/home/ /
-    cp -a /root/data/git/ /
+    cp -a /root/data/home/ /home/
+    cp -a /root/data/git/ /git/
 }
 init(){
     echo "The following procedure is always invoked"
@@ -22,7 +22,6 @@ cat <<EOF >>~/.bashrc
 function TERMINATE {
     systemctl stop rsyslog
     systemctl stop sshd
-    systemctl stop lsyncd
     echo "container terminate" >> /var/log/docker_container
     date >> /var/log/docker_container
 }

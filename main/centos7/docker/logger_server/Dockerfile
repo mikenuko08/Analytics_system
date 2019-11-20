@@ -40,7 +40,7 @@ COPY ./lsyncd.conf /etc/
 RUN mkdir -p /etc/lsyncd_exclude
 COPY ./lsyncd_exclude/*.list /etc/lsyncd_exclude/
 RUN mkdir -p /var/log/lsyncd
-RUN systemctl enable lsyncd.service
+
 
 # git setting
 RUN mkdir /git
