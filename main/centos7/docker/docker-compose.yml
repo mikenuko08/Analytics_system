@@ -7,9 +7,6 @@ services:
     container_name: logger_server
     tty: true
     privileged: true
-    volumes:
-      - ./logs/logger_log/log/:/var/log/
-      - ./logs/logger_log/git/:/git/
     ports:
       - "22001:22"
   collect_server:
@@ -20,8 +17,6 @@ services:
     tty: true
     privileged: true
     volumes:
-      - ./logs/collect_log/log/:/var/log/
-      - ./logs/collect_log/git/:/git/
       - ./collect_server/log_collect/:/home/log_collect
       - ./collect_server/web/:/home/web
     ports:
