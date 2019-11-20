@@ -9,7 +9,6 @@ services:
     privileged: true
     volumes:
       - ./logs/logger_log/log/:/var/log/
-      - ./logs/logger_log/home/:/home/
       - ./logs/logger_log/git/:/git/
     ports:
       - "22001:22"
