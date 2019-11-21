@@ -14,7 +14,11 @@ init(){
 
 if [ ! -r /var/log/docker_container ] ; then
     first
+    systemctl start crond
+    systemctl enable crond
+    # systemctl start lsyncd
     # systemctl enable lsyncd
+    
 fi
 
 init

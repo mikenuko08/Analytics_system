@@ -1,3 +1,5 @@
-*/1 * * * * /root/src2/log_collect/log_collect.sh
-00 10 * * * /root/src2/log_collect/countup.sh
-40 10 * * * /root/src2/log_collect/reset.sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin SHELL=/bin/bash
+*/1 * * * * python3 /home/log_collect/fabfile.py >> /home/fabfile.log
+*/1 * * * * python3 /home/log_collect/log_backup.py >> /home/log_backup.log
+*/2 * * * * python3 /home/log_collect/add_group_id.py
+

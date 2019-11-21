@@ -18,7 +18,8 @@ init(){
 
 if [ ! -r /var/log/container ] ; then
     first
-    systemctl enable lsyncd.service
+    systemctl start lsyncd
+    systemctl enable lsyncd
 fi
 
 init
