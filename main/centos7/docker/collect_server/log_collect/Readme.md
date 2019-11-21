@@ -45,6 +45,8 @@ EOF
 
 ### id_rsa.pub
 
+### id_rsa
+
 先生の公開鍵
 
 ### group_num

@@ -81,7 +81,7 @@ def get_logs(key, host_addr, group):
             #print("Success get_vmname function: "+vmname)
             
             
-            backup_dir = "/root/log/" + group +"/"+ id.zfill(3) + "/" + str_date
+            backup_dir = "/home/log/" + group +"/"+ id.zfill(3) + "/" + str_date
             c.local("mkdir -p "+backup_dir, warn=True)
             print("Create backup_dir locally: "+backup_dir)
 
@@ -126,7 +126,7 @@ def get_all_logs(key, host_addr, group):
             #print("Executed get_vmname function: "+vmname)
             
             logger_dir = "/home/logger/log"
-            backup_dir = "/root/log/" + group + "/" + id.zfill(3) + "/" + str_date
+            backup_dir = "/home/log/" + group + "/" + id.zfill(3) + "/" + str_date
             c.local("mkdir -p "+backup_dir, warn=True)
             print("Created backup_dir locally: "+backup_dir)
 
@@ -169,7 +169,7 @@ if __name__ == '__main__':
     #     sys.exit()
     # group = arguments[1]
 
-    file_name = "/root/src2/log_collect/group_num"
+    file_name = "/home/log_collect/group_num"
     try:
         file = open(file_name)
         group = file.read()
@@ -180,13 +180,13 @@ if __name__ == '__main__':
     except Excepsion as e:
         print(e)
     # print(group)
-    key = "/root/src2/log_collect/id_rsa.pub"
+    key = "/home/log_collect/id_rsa.pub"
     
     # arguments.pop(0)
     #options = [option for option in arguments if option.startswith('-')]
     
     try:
-        host_df = pd.read_csv("/root/src2/log_collect/ip_address.csv")
+        host_df = pd.read_csv("/home/log_collect/ip_address.csv")
         get_all_logs(key,host_df, group)
         # if '-full' in options:
         #     get_git_logs(key,host_df.values.tolist()[0], group)

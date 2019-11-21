@@ -1,1 +1,1 @@
-/root/src2/log_collect/reset_command_history.sh >> /root/rest.log
+/home/log_collect/reset_command_history.sh >> /home/rest.log

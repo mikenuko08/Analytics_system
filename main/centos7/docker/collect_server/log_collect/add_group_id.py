@@ -1,5 +1,5 @@
 if __name__ == "__main__":
-    file_name =  "/root/src2/log_collect/group_num"
+    file_name = "/home/log_collect/group_num"
     try:
         file1 = open(file_name)
         group = file1.read()
@@ -16,6 +16,3 @@ if __name__ == "__main__":
         file2.close()
     except Exception as e:
         print(e)
-    
-
-
