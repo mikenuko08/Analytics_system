@@ -27,9 +27,9 @@ RUN yum install -y epel-release
 RUN sed -i -e "s/enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
 RUN yum --enablerepo=epel install -y lsyncd
 RUN yum remove -y epel-release
-COPY ./lsyncd/lsyncd.conf /etc/
+COPY ./model/lsyncd/lsyncd.conf /etc/
 RUN mkdir -p /etc/lsyncd_exclude
-# COPY ./lsyncd_exclude/*.list /etc/lsyncd_exclude/
+# COPY ./model/lsyncd/lsyncd_exclude/*.list /etc/lsyncd_exclude/
 RUN mkdir -p /var/log/lsyncd
 
 # python3.6 install

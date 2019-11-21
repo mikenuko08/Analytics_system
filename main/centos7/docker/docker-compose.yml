@@ -22,6 +22,7 @@ services:
     privileged: true
     volumes:
       - ./collect_server/log_collect/:/root/log_collect
+      - ./collect_server/model/:/root/model
       - ./collect_server/web/:/root/web
     networks:
       - logger-collect-network
