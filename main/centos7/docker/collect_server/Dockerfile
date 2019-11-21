@@ -58,7 +58,8 @@ ENV LANG="ja_JP.UTF-8" \
     LC_ALL="ja_JP.UTF-8"
 
 #add ssh user
-ADD ./id_rsa.pub /root/.ssh/authorized_keys
+COPY ./id_rsa.pub /root/.ssh/authorized_keys
+COPY ./id_rsa /root/.ssh/
 RUN chmod 600 /root/.ssh/authorized_keys
 RUN chown root.root /root/.ssh/authorized_keys
 
