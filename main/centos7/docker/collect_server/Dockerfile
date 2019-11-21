@@ -17,7 +17,7 @@ RUN echo "NETWORKING=yes" > /etc/sysconfig/network
 WORKDIR /root/
 
 # git install
-RUN yum -y install gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker autoconf wget make which
+RUN yum -y install gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker autoconf wget make which iproute
 RUN wget https://www.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz
 RUN tar vfx git-2.9.5.tar.gz;cd git-2.9.5;make configure;./configure --prefix=/usr/local;make all;make prefix=/usr/local install
 
@@ -34,6 +34,7 @@ RUN pip3 install flask
 RUN pip3 install flask-bootstrap
 RUN pip3 install flask-pymongo
 RUN pip3 install python-dateutil
+RUN pip3 install python-dotenv
 
 # git setting
 RUN mkdir /git
