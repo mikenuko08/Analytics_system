@@ -14,6 +14,7 @@ init(){
 
 if [ ! -r /var/log/docker_container ] ; then
     first
+    # systemctl enable lsyncd
 fi
 
 init
@@ -22,6 +23,7 @@ cat <<EOF >>~/.bashrc
 function TERMINATE {
     systemctl stop rsyslog
     systemctl stop sshd
+    # systemctl stop lsyncd
     echo "container terminate" >> /var/log/docker_container
     date >> /var/log/docker_container
 }

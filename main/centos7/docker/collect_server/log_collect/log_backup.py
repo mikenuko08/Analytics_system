@@ -44,7 +44,7 @@ def get_git_logs(key, host_addr, group):
             #vmname = get_vmname(c)
             #print("Success get_vmname function: "+vmname)
 
-            backup_dir = "/root/log/" + group + \
+            backup_dir = settings.SYSTEM_LOG + "/" + group + \
                 "/" + id.zfill(3) + "/" + str_date
             c.local("mkdir -p "+backup_dir, warn=True)
             print("Create backup_dir locally: "+backup_dir)
@@ -140,7 +140,7 @@ def get_all_logs(key, host_addr, group):
             #print("Executed get_vmname function: "+vmname)
 
             logger_dir = "/home/logger/log"
-            backup_dir = settings.SYSTEM_LOG + group + \
+            backup_dir = settings.SYSTEM_LOG + "/" + group + \
                 "/" + id.zfill(3) + "/" + str_date
             c.local("mkdir -p "+backup_dir, warn=True)
             print("Created backup_dir locally: "+backup_dir)

@@ -14,12 +14,23 @@ RUN sed -i -e "s/#PubkeyAuthentication yes/PubkeyAuthentication yes/g" /etc/ssh/
 RUN echo "NETWORKING=yes" > /etc/sysconfig/network
 
 # change directory
-WORKDIR /root/
+WORKDIR /
 
 # git install
-RUN yum -y install gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker autoconf wget make which iproute
+RUN yum -y install gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker autoconf wget make which iproute sudo
 RUN wget https://www.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz
 RUN tar vfx git-2.9.5.tar.gz;cd git-2.9.5;make configure;./configure --prefix=/usr/local;make all;make prefix=/usr/local install
+RUN rm git-2.9.5.tar.gz
+
+# lsyncd install
+RUN yum install -y epel-release
+RUN sed -i -e "s/enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
+RUN yum --enablerepo=epel install -y lsyncd
+RUN yum remove -y epel-release
+COPY ./lsyncd.conf /etc/
+RUN mkdir -p /etc/lsyncd_exclude
+# COPY ./lsyncd_exclude/*.list /etc/lsyncd_exclude/
+RUN mkdir -p /var/log/lsyncd
 
 # python3.6 install
 RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm
@@ -57,10 +68,12 @@ ENV LANG="ja_JP.UTF-8" \
     LANGUAGE="ja_JP:ja" \
     LC_ALL="ja_JP.UTF-8"
 
-#add ssh user
-COPY ./id_rsa.pub /root/.ssh/authorized_keys
+#add ssh key
 COPY ./id_rsa /root/.ssh/
+COPY ./id_rsa.pub /root/.ssh/authorized_keys
+RUN chmod 600 /root/.ssh/id_rsa
 RUN chmod 600 /root/.ssh/authorized_keys
+RUN chown root.root /root/.ssh/id_rsa
 RUN chown root.root /root/.ssh/authorized_keys
 
 #user settings
@@ -71,12 +84,15 @@ RUN sed -i -e "s/UMASK           077/UMASK           072/g" /etc/login.defs
 
 # ARG USER="logger"
 RUN useradd logger -m
-RUN usermod -aG students logger
+RUN usermod -aG wheel logger
 WORKDIR /home/logger/
 RUN chgrp students ../logger
 COPY ./id_rsa.pub .ssh/authorized_keys
 RUN chmod 644 .ssh/authorized_keys;chmod 700 .ssh
 RUN chown -R logger.logger .ssh/
+RUN sed -i -e 's/# %wheel\tALL=(ALL)\tNOPASSWD: ALL/%wheel\tALL=(ALL)\tNOPASSWD: ALL/' /etc/sudoers
+RUN sed -i -e 's/%wheel\tALL=(ALL)\tALL/# %wheel\tALL=(ALL)\tALL/' /etc/sudoers
+RUN visudo -c
 
 WORKDIR /root/data/
 RUN cp -a /var/log/ /root/data/

@@ -5,12 +5,15 @@ first(){
     cp -a /root/data/log/ /var/
     cp -a /root/data/home/ /home/
     cp -a /root/data/git/ /git/
+    touch /root/.bash_history
+    touch /home/logger/.bash_history
 }
 
 init(){
     echo "The following procedure is always invoked"
     echo "container start" >> /var/log/container
     date >> /var/log/container
+    
 }
 
 if [ ! -r /var/log/container ] ; then

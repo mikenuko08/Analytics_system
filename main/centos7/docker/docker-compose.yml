@@ -11,6 +11,8 @@ services:
       - logger-collect-network
     ports:
       - "22001:22"
+      - "8081:80"
+      - "44003:443"
   collect_server:
     build: collect_server/.
     image: collect_server
@@ -50,7 +52,7 @@ services:
     networks:
       - logger-collect-network
     ports:
-      - "8080:80"
+      - "8082:80"
 
 networks:
   logger-collect-network:
