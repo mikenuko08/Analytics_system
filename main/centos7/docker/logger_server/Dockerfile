@@ -14,14 +14,14 @@ RUN sed -i -e "s/#PubkeyAuthentication yes/PubkeyAuthentication yes/g" /etc/ssh/
 RUN echo "NETWORKING=yes" > /etc/sysconfig/network
 
 # histroy.shの配置
-COPY ./history.sh /etc/profile.d/
+COPY ./command/history.sh /etc/profile.d/
 RUN chmod 644 /etc/profile.d/history.sh
-COPY ./.bashrc /root/
+COPY ./command/.bashrc /root/
 
 # script command setting
 RUN mkdir -p /var/log/script/
 RUN chmod 773 /var/log/script
-COPY ./script.sh /etc/profile.d/
+COPY ./command/script.sh /etc/profile.d/
 RUN chmod 644 /etc/profile.d/script.sh
 
 # change directory
@@ -38,9 +38,9 @@ RUN yum install -y epel-release
 RUN sed -i -e "s/enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
 RUN yum --enablerepo=epel install -y lsyncd
 RUN yum remove -y epel-release
-COPY ./lsyncd.conf /etc/
+COPY ./file_edit/lsyncd/lsyncd.conf /etc/
 RUN mkdir -p /etc/lsyncd_exclude
-COPY ./lsyncd_exclude/*.list /etc/lsyncd_exclude/
+COPY ./file_edit/lsyncd/lsyncd_exclude/*.list /etc/lsyncd_exclude/
 RUN mkdir -p /var/log/lsyncd
 
 
@@ -50,7 +50,7 @@ RUN /usr/local/bin/git -C /git init
 RUN /usr/local/bin/git -C /git config user.name staff
 RUN /usr/local/bin/git -C /git config user.email staff@softiv.info
 
-COPY ./git-commit.sh /git/git-commit.sh
+COPY ./file_edit/git-commit.sh /git/git-commit.sh
 RUN chmod 755 /git/git-commit.sh
 
 RUN echo "export LANG=ja_JP.UTF-8" > /etc/profile.d/setlang.sh
@@ -69,7 +69,7 @@ ENV LANG="ja_JP.UTF-8" \
     LC_ALL="ja_JP.UTF-8"
 
 #add ssh user
-ADD ./id_rsa.pub /root/.ssh/authorized_keys
+ADD ./keys/id_rsa.pub /root/.ssh/authorized_keys
 RUN chmod 600 /root/.ssh/authorized_keys
 RUN chown root.root /root/.ssh/authorized_keys
 
@@ -84,7 +84,7 @@ RUN useradd logger -m
 RUN usermod -aG wheel logger
 WORKDIR /home/logger/
 RUN chgrp students ../logger
-COPY ./id_rsa.pub .ssh/authorized_keys
+COPY ./keys/id_rsa.pub .ssh/authorized_keys
 RUN chmod 644 .ssh/authorized_keys;chmod 700 .ssh
 RUN chown -R logger.logger .ssh/
 RUN sed -i -e 's/# %wheel\tALL=(ALL)\tNOPASSWD: ALL/%wheel\tALL=(ALL)\tNOPASSWD: ALL/' /etc/sudoers

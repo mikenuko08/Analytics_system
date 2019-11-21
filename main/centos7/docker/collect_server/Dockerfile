@@ -27,7 +27,7 @@ RUN yum install -y epel-release
 RUN sed -i -e "s/enabled=1/enabled=0/" /etc/yum.repos.d/epel.repo
 RUN yum --enablerepo=epel install -y lsyncd
 RUN yum remove -y epel-release
-COPY ./lsyncd.conf /etc/
+COPY ./lsyncd/lsyncd.conf /etc/
 RUN mkdir -p /etc/lsyncd_exclude
 # COPY ./lsyncd_exclude/*.list /etc/lsyncd_exclude/
 RUN mkdir -p /var/log/lsyncd
@@ -69,8 +69,8 @@ ENV LANG="ja_JP.UTF-8" \
     LC_ALL="ja_JP.UTF-8"
 
 #add ssh key
-COPY ./id_rsa /root/.ssh/
-COPY ./id_rsa.pub /root/.ssh/authorized_keys
+COPY ./keys/id_rsa /root/.ssh/
+COPY ./keys/id_rsa.pub /root/.ssh/authorized_keys
 RUN chmod 600 /root/.ssh/id_rsa
 RUN chmod 600 /root/.ssh/authorized_keys
 RUN chown root.root /root/.ssh/id_rsa
@@ -87,7 +87,7 @@ RUN useradd logger -m
 RUN usermod -aG wheel logger
 WORKDIR /home/logger/
 RUN chgrp students ../logger
-COPY ./id_rsa.pub .ssh/authorized_keys
+COPY ./keys/id_rsa.pub .ssh/authorized_keys
 RUN chmod 644 .ssh/authorized_keys;chmod 700 .ssh
 RUN chown -R logger.logger .ssh/
 RUN sed -i -e 's/# %wheel\tALL=(ALL)\tNOPASSWD: ALL/%wheel\tALL=(ALL)\tNOPASSWD: ALL/' /etc/sudoers

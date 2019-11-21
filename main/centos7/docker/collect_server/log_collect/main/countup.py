@@ -1,5 +1,9 @@
 # coding: UTF-8
-import settings
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+from env import settings
 
 if __name__ == "__main__":
     file_name = settings.SYSTEM_PATH + "/group_num"

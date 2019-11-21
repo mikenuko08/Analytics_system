@@ -4,8 +4,13 @@ import socket
 import sys
 import re
 import pandas as pd
-import settings
 pd.set_option("display.max_columns",100) #Number of columns in pandas output
+
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+from env import settings
 
 # cat ~/user.dat
 # def get_vmname(con):
@@ -146,7 +151,7 @@ if __name__ == '__main__':
     except Excepsion as e:
         print(e)
     # print(group)
-    key = settings.SYSTEM_PATH + "/id_rsa.pub"
+    key = settings.SYSTEM_PATH + "/keys/id_rsa.pub"
     
     try:
         host_df = pd.read_csv(settings.SYSTEM_PATH + "/ip_address.csv")

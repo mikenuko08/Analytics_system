@@ -3,7 +3,6 @@
 first(){
     echo "The following procedure is invoked only once"
     cp -a /root/data/log/ /var/
-    cp -a /root/data/home/ /home/
     cp -a /root/data/git/ /git/
 }
 init(){

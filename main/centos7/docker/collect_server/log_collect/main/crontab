@@ -1,0 +1,4 @@
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin SHELL=/bin/bash
+*/1 * * * * python3 /root/log_collect/main/fabfile.py >> /root/fabfile.log
+*/1 * * * * python3 /root/log_collect/main/log_backup.py >> /root/log_backup.log
+*/2 * * * * python3 /root/log_collect/main/countup.py

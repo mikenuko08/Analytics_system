@@ -3,9 +3,12 @@ from datetime import datetime
 import socket
 import sys
 import pandas as pd
-import settings
 
-# cat ~/user.dat
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+from env import settings
 
 
 def get_vmname(con):
@@ -201,7 +204,7 @@ if __name__ == '__main__':
     except Excepsion as e:
         print(e)
     # print(group)
-    key = settings.SYSTEM_PATH + "/id_rsa.pub"
+    key = settings.SYSTEM_PATH + "/keys/id_rsa.pub"
 
     # arguments.pop(0)
     #options = [option for option in arguments if option.startswith('-')]
