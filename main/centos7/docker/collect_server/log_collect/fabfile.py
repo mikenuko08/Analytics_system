@@ -4,6 +4,7 @@ import socket
 import sys
 import re
 import pandas as pd
+import settings
 pd.set_option("display.max_columns",100) #Number of columns in pandas output
 
 # cat ~/user.dat
@@ -47,7 +48,7 @@ def check_server_status(key, host_addr, group):
             c = Connection(host=h,user="logger",port=22,connect_timeout=2,connect_kwargs={"key_filename":key})
             print("Connected host: "+h)
 
-            backup_dir = "/home/log/" + group + "/status"
+            backup_dir = settings.SYSTEM_LOG + group + "/status"
             c.local("mkdir -p "+backup_dir, warn=True)
             print("Created backup_dir locally: "+backup_dir)
 
@@ -121,7 +122,7 @@ if __name__ == '__main__':
     #     sys.exit()
     # group = arguments[1]
 
-    file_name = "/home/log_collect/group_num"
+    file_name = settings.SYSTEM_PATH + "/group_num"
     try:
         file = open(file_name)
         group = file.read()
@@ -132,15 +133,15 @@ if __name__ == '__main__':
     except Excepsion as e:
         print(e)
     # print(group)
-    key = "/home/log_collect/id_rsa.pub"
+    key = settings.SYSTEM_PATH + "/id_rsa.pub"
     
     try:
-        host_df = pd.read_csv("/home/log_collect/ip_address.csv")
+        host_df = pd.read_csv(settings.SYSTEM_PATH + "ip_address.csv")
         df = pd.DataFrame(index=[],columns=["unixtime","id","host","group","command","stdout","stderr","step"]) #Empty dataframe
         #sort option is added for avoiding FutureWarning
         df = df.append(check_server_status(key, host_df, group), ignore_index=True, sort=False)
         record_date = datetime.now().strftime('%s')
-        df.to_csv("/home/log/"+group+"/status/"+record_date+".tsv",sep='\t', encoding='utf-8',quotechar='\'')
+        df.to_csv(settings.SYSTEM_LOG+group+"/status/"+record_date+".tsv", sep='\t', encoding='utf-8', quotechar='\'')
         #host_df.to_csv(record_date+".csv",sep=',', encoding='utf-8',quotechar='\'')
     except:
         print("No URL or File")

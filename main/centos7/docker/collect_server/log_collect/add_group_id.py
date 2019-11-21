@@ -1,5 +1,8 @@
+# coding: UTF-8
+import settings
+
 if __name__ == "__main__":
-    file_name = "/home/log_collect/group_num"
+    file_name = settings.SYSTEM_PATH + "/group_num"
     try:
         file1 = open(file_name)
         group = file1.read()
