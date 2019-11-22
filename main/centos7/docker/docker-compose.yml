@@ -10,9 +10,9 @@ services:
     networks:
       - logger-collect-network
     ports:
-      - "22001:22"
-      - "8081:80"
-      - "44003:443"
+      - "22:22"
+      - "80:80"
+      - "443:443"
   collect_server:
     build: collect_server/.
     image: collect_server
@@ -27,22 +27,8 @@ services:
     networks:
       - logger-collect-network
     ports:
-      - "22002:22"
-      - "5001:5000"
-  mongo:
-    image: mongo
-    restart: always
-    hostname: mongo
-    container_name: mongo
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-    volumes:
-      - ./logs/mongo_db:/data/db
-    networks:
-      - logger-collect-network
-    ports:
-      - "27017:27017"
+      - "23:22"
+      - "5000:5000"
   httpd:
     image: httpd
     restart: always
@@ -53,7 +39,35 @@ services:
     networks:
       - logger-collect-network
     ports:
-      - "8082:80"
+      - "81:80"
+  mongo:
+    image: mongo
+    restart: always
+    hostname: mongo
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
+      - 27018:27018
+    volumes:
+      - ./logs/mongo_db/db:/data/db
+      # - ./logs/mongo_db/configdb:/data/configdb
+    networks:
+      - logger-collect-network
+  mongo-express:
+    image: mongo-express
+    hostname: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+    networks:
+      - logger-collect-network
 
 networks:
   logger-collect-network:
