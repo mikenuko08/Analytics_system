@@ -48,7 +48,7 @@ def get_git_logs(key, host_addr, group):
             #print("Success get_vmname function: "+vmname)
 
             backup_dir = settings.SYSTEM_LOG + "/" + group + \
-                "/" + id.zfill(3) + "/" + str_date
+                "/command/" + id.zfill(3) + "/" + str_date
             c.local("mkdir -p "+backup_dir, warn=True)
             print("Create backup_dir locally: "+backup_dir)
 
@@ -93,8 +93,8 @@ def get_logs(key, host_addr, group):
             #vmname = get_vmname(c)
             #print("Success get_vmname function: "+vmname)
 
-            backup_dir = settings.SYSTEM_LOG + group + \
-                "/" + id.zfill(3) + "/" + str_date
+            backup_dir = settings.SYSTEM_LOG + "/" + group + \
+                "/command/" + id.zfill(3) + " /" + str_date
             c.local("mkdir -p "+backup_dir, warn=True)
             print("Create backup_dir locally: "+backup_dir)
 
@@ -143,41 +143,46 @@ def get_all_logs(key, host_addr, group):
             #print("Executed get_vmname function: "+vmname)
 
             logger_dir = "/home/logger/log"
-            backup_dir = settings.SYSTEM_LOG + "/" + group + \
-                "/" + id.zfill(3) + "/" + str_date
-            c.local("mkdir -p "+backup_dir, warn=True)
-            print("Created backup_dir locally: "+backup_dir)
+            command_backup_dir = settings.SYSTEM_LOG + "/" + \
+                group + "/command/" + id.zfill(3) + "/" + str_date
+            c.local("mkdir -p " + command_backup_dir, warn=True)
+            print("Created command_backup_dir locally: " + command_backup_dir)
 
-            c.run("sudo mkdir -p "+logger_dir, warn=True)
-            print("Create backup_dir on remote: "+logger_dir)
+            c.run("sudo mkdir -p " + logger_dir, warn=True)
+            print("Create command_backup_dir on remote: "+logger_dir)
 
-            c.run("sudo tar czf "+logger_dir +
+            c.run("sudo tar czf " + logger_dir +
                   "/script.tar.gz -C /var/log/ script", warn=True)
             print("Created script.tar.gz on remote")
 
             c.get("/home/logger/log/script.tar.gz",
-                  backup_dir+"/script.tar.gz")
+                  command_backup_dir + "/script.tar.gz")
             print("Get script.tar.gz on remote")
 
-            c.run("sudo rm -rf "+logger_dir+"/script.tar.gz", warn=True)
+            c.run("sudo rm -rf " + logger_dir + "/script.tar.gz", warn=True)
             print("Deleted script.tar.gz on remote")
 
-            c.run("sudo cp /root/.command_history "+logger_dir, warn=True)
+            c.run("sudo cp /root/.command_history " + logger_dir, warn=True)
             print(
-                "Copy /root/.command_history to /home/logger/log/.command_history on remote")
+                "Copy /root/.command_history to " + logger_dir + "/.command_history on remote")
 
-            c.get(logger_dir+"/.command_history",
-                  backup_dir+"/.command_history")
+            c.get(logger_dir + "/.command_history",
+                  command_backup_dir + "/.command_history")
             print("Get .command_history on remote")
 
-            c.run("sudo tar czf "+logger_dir +
-                  "/git.tar.gz"+" -C / git", warn=True)
+            file_edit_backup_dir = settings.SYSTEM_LOG + "/" + \
+                group + "/file_edit/" + id.zfill(3) + "/" + str_date
+            c.local("mkdir -p " + file_edit_backup_dir, warn=True)
+            print("Created file_edit_backup_dir locally: " + file_edit_backup_dir)
+            c.run("sudo tar czf " + logger_dir +
+                  "/git.tar.gz -C / git", warn=True)
             print("Created git.tar.gz on remote")
 
-            c.get(logger_dir+"/git.tar.gz", backup_dir+"/git.tar.gz")
+            c.get(logger_dir + "/git.tar.gz",
+                  file_edit_backup_dir + "/git.tar.gz")
             print("Get git.tar.gz on remote")
 
-            c.run("sudo rm -rf "+logger_dir+"/git.tar.gz", warn=True)
+            c.run("sudo rm -rf " + logger_dir + "/git.tar.gz", warn=True)
             print("Deleted git.tar.gz on remote")
 
             print("--------------- Finish get_all_logs function ---------------")

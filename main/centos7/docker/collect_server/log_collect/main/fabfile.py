@@ -53,7 +53,7 @@ def check_server_status(key, host_addr, group):
             c = Connection(host=h,user="logger",port=22,connect_timeout=2,connect_kwargs={"key_filename":key})
             print("Connected host: "+h)
 
-            backup_dir = settings.SYSTEM_LOG + "/" +  group + "/status"
+            backup_dir = settings.SYSTEM_LOG + "/" + group + "/status"
             c.local("mkdir -p "+backup_dir, warn=True)
             print("Created backup_dir locally: "+backup_dir)
 
@@ -153,13 +153,14 @@ if __name__ == '__main__':
     # print(group)
     key = settings.SYSTEM_PATH + "/keys/id_rsa.pub"
     
-    try:
-        host_df = pd.read_csv(settings.SYSTEM_PATH + "/ip_address.csv")
-        df = pd.DataFrame(index=[],columns=["unixtime","id","host","group","command","stdout","stderr","step"]) #Empty dataframe
-        #sort option is added for avoiding FutureWarning
-        df = df.append(check_server_status(key, host_df, group), ignore_index=True, sort=False)
-        record_date = datetime.now().strftime('%s')
-        df.to_csv(settings.SYSTEM_LOG + "/" + group + "/status/" + record_date + ".tsv", sep='\t', encoding='utf-8', quotechar='\'')
-        #host_df.to_csv(record_date+".csv",sep=',', encoding='utf-8',quotechar='\'')
-    except:
-        print("No URL or File")
+    # try:
+    host_df = pd.read_csv(settings.SYSTEM_PATH+"/ip_address.csv")
+    df = pd.DataFrame(index=[],columns=["unixtime","id","host","group","command","stdout","stderr","step"]) #Empty dataframe
+    #sort option is added for avoiding FutureWarning
+    df = df.append(check_server_status(key, host_df, group), ignore_index=True, sort=False)
+    record_date = datetime.now().strftime('%s')
+    save_file = settings.SYSTEM_LOG+"/"+group+"/status/"+record_date +".tsv"
+    df.to_csv(save_file, sep='\t', encoding='utf-8', quotechar='\'')
+    #host_df.to_csv(record_date+".csv",sep=',', encoding='utf-8',quotechar='\'')
+    # except:
+    #     print("No URL or File")

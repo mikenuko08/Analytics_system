@@ -52,7 +52,7 @@ services:
       - 27017:27017
       - 27018:27018
     volumes:
-      - ./logs/mongo_db/db:/data/db
+      - ./mongodb/db:/data/db
       # - ./logs/mongo_db/configdb:/data/configdb
     networks:
       - logger-collect-network

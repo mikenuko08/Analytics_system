@@ -3,3 +3,4 @@ mongodb
 id_rsa
 id_rsa.pub
 .env
+__pycache__

@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # coding:utf-8
 
-import pymongo
-import gridfs
+from pymongo import MongoClient
 import datetime
 
 import os
@@ -17,26 +16,34 @@ port = settings.DB_PORT
 
 # ユーザ/パスワード
 user = settings.DB_USER
-pwd = settings.DB_PASS
+pawd = settings.DB_PASS
 
-#  DBの名前/コレクションの設定
-db_name = settings.DB_NAME
-db_col = settings.DB_COL
+# DBのURL
+db_url = "mongodb://" + user + ":" + pawd + "@" + host + ":" + port
 
 
-class Students_DB:
-    def __init__(self, *args, **kwargs):
-        self.client = pymongo.MongoClient(host, port)
-        self.client[db_name].authenticate(user, pwd)
+class DBController:
+    def __init__(self, db_name, collection, *args, **kwargs):
+        self.client = MongoClient(db_url)
+        self.db = db_name
+        self.col = collection
 
-    def insert(self, collection, dict={}):
-        self.col = self.client[db_name][collection]
-        return self.col.insert(dict)
+    def insert(self, dict={}):
+        self.database = self.client[self.db][self.col]
+        return self.database.insert(dict)
 
-    def find(self, collection, dict={}):
-        self.col = self.client[db_name][collection]
-        return self.col.find(dict)
+    def find(self, dict={}):
+        self.database = self.client[self.db][self.col]
+        return self.database.find(dict)
 
-    def distinct(self, collection, feild):
-        self.col = self.client[db_name][collection]
-        return self.col.distinct(feild)
+    def distinct(self, feild):
+        self.database = self.client[self.db][self.col]
+        return self.database.distinct(feild)
+
+
+# if __name__ == "__main__":
+#     dic = {"name": "sato"}
+#     st = DBController("students", "status")
+#     st.insert(dic)
+#     print(len(list(st.find())))
+#     print(st.distinct("name"))
