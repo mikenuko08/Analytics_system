@@ -51,6 +51,7 @@ RUN /usr/local/bin/git -C /git config user.name staff
 RUN /usr/local/bin/git -C /git config user.email staff@softiv.info
 
 COPY ./file_edit/git-commit.sh /git/git-commit.sh
+COPY ./file_edit/.gitignore /git/.gitignore
 RUN chmod 755 /git/git-commit.sh
 
 RUN echo "export LANG=ja_JP.UTF-8" > /etc/profile.d/setlang.sh
@@ -86,6 +87,7 @@ WORKDIR /home/logger/
 RUN chgrp students ../logger
 COPY ./keys/id_rsa.pub .ssh/authorized_keys
 RUN chmod 644 .ssh/authorized_keys;chmod 700 .ssh
+RUN chown -R logger.logger /var/log/script
 RUN chown -R logger.logger .ssh/
 RUN sed -i -e 's/# %wheel\tALL=(ALL)\tNOPASSWD: ALL/%wheel\tALL=(ALL)\tNOPASSWD: ALL/' /etc/sudoers
 RUN sed -i -e 's/%wheel\tALL=(ALL)\tALL/# %wheel\tALL=(ALL)\tALL/' /etc/sudoers
