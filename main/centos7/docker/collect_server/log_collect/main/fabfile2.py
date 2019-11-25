@@ -47,24 +47,21 @@ def check_server_status(key, st, host_addr, group):
         # print(h)
 
         try:
-            print("--------------- Check_server_status function " + (str)(id) + " ---------------")
+            print("--------------- students_id: " + (str)(id) + " ---------------")
             c = Connection(host=h, user="logger", port=22, connect_timeout=2, connect_kwargs={"key_filename": key})
             print("Connected host: "+h)
 
-            backup_dir = settings.SYSTEM_LOG + "/" + group + "/status/" + command_id + "/"
+            backup_dir = settings.SYSTEM_LOG + group + "/status/" + command_id
             c.local("mkdir -p "+backup_dir, warn=True)
             print("Created backup_dir locally: "+backup_dir)
 
             #コマンド が一つでも失敗するとログの収集が行えない．
             if run_type == "run_server_cmd":
                 df = run_server_cmd(id, df, h, group, c, command, command_id)
-                print(command_id)
             elif run_type == "run_local_cmd":
                 pattern = re.compile(r'ip_address')
                 command = pattern.sub(h, command)
                 df = run_local_cmd(id, df, h, group, c, command, command_id)
-                print(command_id)
-            print("--------------- Finish check_server_status function ---------------")
             print()
         except:
             print("{}: {}: {}".format(
@@ -102,13 +99,22 @@ if __name__ == '__main__':
         status = pd.read_csv(settings.SYSTEM_PATH + "/status_list.csv")
         host_df = pd.read_csv(settings.SYSTEM_PATH + "/ip_address.csv")
 
+        print("--------------- Start collect log function ---------------")
         # sort option is added for avoiding FutureWarning
         for i, st in status.iterrows():
             df = pd.DataFrame(index=[],columns=["unixtime","id","host","group","command","stdout","stderr","step"]) #Empty dataframe
             command_id = st['command_id']
+            command = st['command']
+            print("--------------- server status command ---------------")
+            print(command_id + ": " + command)
+            print()
             df = df.append(check_server_status(key, st, host_df, group), ignore_index=True, sort=False)
             record_date = datetime.now().strftime('%s')
-            df.to_csv(settings.SYSTEM_LOG + "/" + group + "/status/" + command_id + "/" + record_date + ".tsv", sep='\t', encoding='utf-8', quotechar='\'')
+            df.to_csv(settings.SYSTEM_LOG + group + "/status/" + command_id + "/" + record_date + ".tsv", sep='\t', encoding='utf-8', quotechar='\'')
             # host_df.to_csv(record_date+".csv",sep=',', encoding='utf-8',quotechar='\'')
+
+        print("--------------- Finish collect log function ---------------")
+        print()
+
     except:
         print("No URL or File")

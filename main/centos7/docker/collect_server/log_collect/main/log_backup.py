@@ -47,7 +47,7 @@ def get_git_logs(key, host_addr, group):
             #vmname = get_vmname(c)
             #print("Success get_vmname function: "+vmname)
 
-            backup_dir = settings.SYSTEM_LOG + "/" + group + \
+            backup_dir = settings.SYSTEM_LOG + group + \
                 "/command/" + id.zfill(3) + "/" + str_date
             c.local("mkdir -p "+backup_dir, warn=True)
             print("Create backup_dir locally: "+backup_dir)
@@ -93,7 +93,7 @@ def get_logs(key, host_addr, group):
             #vmname = get_vmname(c)
             #print("Success get_vmname function: "+vmname)
 
-            backup_dir = settings.SYSTEM_LOG + "/" + group + \
+            backup_dir = settings.SYSTEM_LOG + group + \
                 "/command/" + id.zfill(3) + " /" + str_date
             c.local("mkdir -p "+backup_dir, warn=True)
             print("Create backup_dir locally: "+backup_dir)
@@ -143,8 +143,8 @@ def get_all_logs(key, host_addr, group):
             #print("Executed get_vmname function: "+vmname)
 
             logger_dir = "/home/logger/log"
-            command_backup_dir = settings.SYSTEM_LOG + "/" + \
-                group + "/command/" + id.zfill(3) + "/" + str_date
+            command_backup_dir = settings.SYSTEM_LOG + group + \
+                "/command/" + id.zfill(3) + "/" + str_date
             c.local("mkdir -p " + command_backup_dir, warn=True)
             print("Created command_backup_dir locally: " + command_backup_dir)
 
@@ -170,8 +170,8 @@ def get_all_logs(key, host_addr, group):
                   command_backup_dir + "/.command_history")
             print("Get .command_history on remote")
 
-            file_edit_backup_dir = settings.SYSTEM_LOG + "/" + \
-                group + "/file_edit/" + id.zfill(3) + "/" + str_date
+            file_edit_backup_dir = settings.SYSTEM_LOG + group + \
+                "/file_edit/" + id.zfill(3) + "/" + str_date
             c.local("mkdir -p " + file_edit_backup_dir, warn=True)
             print("Created file_edit_backup_dir locally: " + file_edit_backup_dir)
             c.run("sudo tar czf " + logger_dir +

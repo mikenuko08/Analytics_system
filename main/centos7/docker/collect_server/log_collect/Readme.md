@@ -1,6 +1,24 @@
 # log_collect 以下にあるファイルの紹介
 
-## ログ収集用プログラム(Python3)
+## 環境変数設定用プログラム /env (Python3)
+
+### .env_sample
+
+ログ収集プログラムが配置されたディレクトリやログ収集ディレクトリなどの必要な環境変数を記述する．実際に利用する際には.env をファイル名を変更して利用する．
+
+### setting.py
+
+.env ファイルを読み込んで環境編集を設定するプログラム．このプログラムを利用したいプログラムで読み込むと.env ファイルに設定した変数が利用できる．利用方法は下記に記す．
+
+```Python
+from env import settings
+```
+
+### \_\_init\_\_.py
+
+ググれば意味わかるよ．Python の機能の一つやから
+
+## ログ収集用プログラム /main (Python3)
 
 ### fabfile.py
 
@@ -106,7 +124,7 @@ ex. crontab -e
 ```
 */5 * * * * /root/src2/log_collect/log_collect.sh
 00 10 * * * /root/src2/log_collect/countup.sh
-```
+```a
 
 ### \*3-1. nohup コマンドを使って fab_call.sh を実行する
 
