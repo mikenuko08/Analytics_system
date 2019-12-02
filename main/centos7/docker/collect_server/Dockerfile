@@ -1,7 +1,8 @@
 FROM centos:7
 
-# update yum package
+# update yum package and install essential software
 RUN yum update -y
+RUN yum -y install gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker autoconf wget make which iproute sudo cronie
 
 # change UTC to JST
 RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
@@ -17,7 +18,6 @@ RUN echo "NETWORKING=yes" > /etc/sysconfig/network
 WORKDIR /
 
 # git install
-RUN yum -y install gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker autoconf wget make which iproute sudo cronie
 RUN wget https://www.kernel.org/pub/software/scm/git/git-2.9.5.tar.gz
 RUN tar vfx git-2.9.5.tar.gz;cd git-2.9.5;make configure;./configure --prefix=/usr/local;make all;make prefix=/usr/local install
 RUN rm git-2.9.5.tar.gz
@@ -35,17 +35,6 @@ RUN mkdir -p /var/log/lsyncd
 # python3.6 install
 RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm
 RUN yum install -y python36u python36u-libs python36u-devel python36u-pip
-
-#python3.6 configuration"
-# RUN ln -s /usr/bin/python3.6 /usr/bin/python3
-# RUN ln -s /usr/bin/pip3.6 /usr/bin/pip3
-RUN pip3 install fabric
-RUN pip3 install pandas
-RUN pip3 install flask
-RUN pip3 install flask-bootstrap
-RUN pip3 install flask-pymongo
-RUN pip3 install python-dateutil
-RUN pip3 install python-dotenv
 
 # git setting
 RUN mkdir /git
@@ -82,7 +71,7 @@ RUN useradd -D -g students
 #RUN sed -i -e "s/USERGROUPS_ENAB yes/USERGROUPS_ENAB no/g" /etc/login.defs
 RUN sed -i -e "s/UMASK           077/UMASK           072/g" /etc/login.defs
 
-# ARG USER="logger"
+# logger user setting
 RUN useradd logger -m
 RUN usermod -aG wheel logger
 WORKDIR /home/logger/
@@ -90,6 +79,7 @@ RUN chgrp students ../logger
 COPY ./keys/id_rsa.pub .ssh/authorized_keys
 RUN chmod 644 .ssh/authorized_keys;chmod 700 .ssh
 RUN chown -R logger.logger .ssh/
+# add sudo user
 RUN sed -i -e 's/# %wheel\tALL=(ALL)\tNOPASSWD: ALL/%wheel\tALL=(ALL)\tNOPASSWD: ALL/' /etc/sudoers
 RUN sed -i -e 's/%wheel\tALL=(ALL)\tALL/# %wheel\tALL=(ALL)\tALL/' /etc/sudoers
 RUN visudo -c

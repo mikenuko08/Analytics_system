@@ -80,7 +80,7 @@ RUN useradd -D -g students
 #RUN sed -i -e "s/USERGROUPS_ENAB yes/USERGROUPS_ENAB no/g" /etc/login.defs
 RUN sed -i -e "s/UMASK           077/UMASK           072/g" /etc/login.defs
 
-# ARG USER="logger"
+# logger user settings
 RUN useradd logger -m
 RUN usermod -aG wheel logger
 WORKDIR /home/logger/
@@ -89,6 +89,7 @@ COPY ./keys/id_rsa.pub .ssh/authorized_keys
 RUN chmod 644 .ssh/authorized_keys;chmod 700 .ssh
 RUN chown -R logger.logger /var/log/script
 RUN chown -R logger.logger .ssh/
+# add sudo user
 RUN sed -i -e 's/# %wheel\tALL=(ALL)\tNOPASSWD: ALL/%wheel\tALL=(ALL)\tNOPASSWD: ALL/' /etc/sudoers
 RUN sed -i -e 's/%wheel\tALL=(ALL)\tALL/# %wheel\tALL=(ALL)\tALL/' /etc/sudoers
 RUN visudo -c

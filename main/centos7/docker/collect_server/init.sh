@@ -4,7 +4,19 @@ first(){
     echo "The following procedure is invoked only once"
     cp -a /root/data/log/ /var/
     cp -a /root/data/git/ /git/
+    #python3.6 configuration"
+    #ln -s /usr/bin/python3.6 /usr/bin/python3
+    #ln -s /usr/bin/pip3.6 /usr/bin/pip3
+    pip3 install fabric
+    pip3 install pandas
+    pip3 install flask
+    pip3 install flask-bootstrap
+    pip3 install flask-pymongo
+    pip3 install python-dateutil
+    pip3 install python-dotenv
+    pip3 install selenium pyvirtualdisplay
 }
+
 init(){
     echo "The following procedure is always invoked"
     echo "container start" >> /var/log/docker_container
@@ -17,7 +29,6 @@ if [ ! -r /var/log/docker_container ] ; then
     systemctl enable crond
     # systemctl start lsyncd
     # systemctl enable lsyncd
-    
 fi
 
 init

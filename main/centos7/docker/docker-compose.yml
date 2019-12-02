@@ -68,6 +68,23 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: password
     networks:
       - logger-collect-network
+  gitbucket:
+    image: gitbucket/gitbucket
+    restart: always
+    ports:
+      - 8080:8080
+      - 29418:29418
+    volumes:
+      - ./logs/gitbucket:/gitbucket
+    environment:
+      - GITBUCKET_DB_USER=gitbucket
+      - GITBUCKET_DB_PASSWORD=gitbucket
+    command:
+      ["sh", "-c", "java -jar /opt/gitbucket.war --max_file_size=3145728"]
+    networks:
+      - logger-collect-network
+  selenium:
+    image: gitbucket/gitbucket
 
 networks:
   logger-collect-network:

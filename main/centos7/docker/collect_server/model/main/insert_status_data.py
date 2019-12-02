@@ -3,6 +3,8 @@ import glob
 import pandas as pd
 from mongo_connect import DBController
 
+import html
+
 # DB名/コレクション名
 db_name = "students"
 db_col = "status"
@@ -12,6 +14,13 @@ def main(argv):
     db_con = DBController(db_name, db_col)
     # print(argv[0])
     file_path = argv[0]
+
+    # 引数から取得したfile_pathの値がDBにあるかどうかを確認
+    # 1. DBでfile_pathをfindする
+    # if file_pathがDB上にない:
+    #    2. このfile_pathをDB上に追加
+    #    3. このfile_pathの_idを記録
+    #    4. 以下の処理を行い_idのドキュメントにログ収集結果を追加
 
     file_path_list = file_path.split('/')
     # print(len(file_path_list))
@@ -40,11 +49,11 @@ def main(argv):
                 'host': row.host,
                 'group': int(row.group),
                 'command': row.command,
-                'stdout': row.stdout,
-                'stderr': row.stderr,
+                'stdout': html.escape(str(row.stdout)),
+                'stderr': html.escape(str(row.stderr)),
                 'step': row.step,
-                'date': int(row.unixtime),
-                'unixtime': int(unixtime),
+                'detail_collection_time': int(row.unixtime),
+                'collection_time': int(unixtime),
             }
             db_con.insert(dic)
 

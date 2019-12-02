@@ -32,8 +32,16 @@ class DBController:
         self.database = self.client[self.db][self.col]
         return self.database.insert(dict)
 
-    def find(self, dict={}):
+    def find(self, dict={}, limit=0, count=False):
         self.database = self.client[self.db][self.col]
+        if count and limit >= 1:
+            result = self.database.find(dict).limit(limit)
+            return result.count(True)
+        elif count:
+            result = self.database.find(dict)
+            return result.count(True)
+        elif limit >= 1:
+            return self.database.find(dict).limit(limit)
         return self.database.find(dict)
 
     def distinct(self, feild):
