@@ -83,8 +83,6 @@ services:
       ["sh", "-c", "java -jar /opt/gitbucket.war --max_file_size=3145728"]
     networks:
       - logger-collect-network
-  selenium:
-    image: gitbucket/gitbucket
 
 networks:
   logger-collect-network:

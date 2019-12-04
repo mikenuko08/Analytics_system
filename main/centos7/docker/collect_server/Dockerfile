@@ -60,6 +60,8 @@ ENV LANG="ja_JP.UTF-8" \
 #add ssh key
 COPY ./keys/id_rsa /root/.ssh/
 COPY ./keys/id_rsa.pub /root/.ssh/authorized_keys
+COPY ./keys/config /root/.ssh/
+
 RUN chmod 600 /root/.ssh/id_rsa
 RUN chmod 600 /root/.ssh/authorized_keys
 RUN chown root.root /root/.ssh/id_rsa

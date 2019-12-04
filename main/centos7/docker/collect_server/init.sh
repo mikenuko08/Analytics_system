@@ -15,6 +15,7 @@ first(){
     pip3 install python-dateutil
     pip3 install python-dotenv
     pip3 install selenium pyvirtualdisplay
+    pip3 install GitPython
 }
 
 init(){

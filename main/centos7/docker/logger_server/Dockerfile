@@ -50,8 +50,8 @@ RUN /usr/local/bin/git -C /git init
 RUN /usr/local/bin/git -C /git config user.name staff
 RUN /usr/local/bin/git -C /git config user.email staff@softiv.info
 
-COPY ./file_edit/git-commit.sh /git/git-commit.sh
-COPY ./file_edit/.gitignore /git/.gitignore
+COPY ./file_edit/git-commit.sh /git/
+COPY ./file_edit/.gitignore /git/
 RUN chmod 755 /git/git-commit.sh
 
 RUN echo "export LANG=ja_JP.UTF-8" > /etc/profile.d/setlang.sh
@@ -70,7 +70,7 @@ ENV LANG="ja_JP.UTF-8" \
     LC_ALL="ja_JP.UTF-8"
 
 #add ssh user
-ADD ./keys/id_rsa.pub /root/.ssh/authorized_keys
+COPY ./keys/id_rsa.pub /root/.ssh/authorized_keys
 RUN chmod 600 /root/.ssh/authorized_keys
 RUN chown root.root /root/.ssh/authorized_keys
 
@@ -94,10 +94,10 @@ RUN sed -i -e 's/# %wheel\tALL=(ALL)\tNOPASSWD: ALL/%wheel\tALL=(ALL)\tNOPASSWD:
 RUN sed -i -e 's/%wheel\tALL=(ALL)\tALL/# %wheel\tALL=(ALL)\tALL/' /etc/sudoers
 RUN visudo -c
 
-WORKDIR /root/data/
-RUN cp -a /var/log/ /root/data/
-RUN cp -a /home/ /root/data/
-RUN cp -a /git/ /root/data/
+# WORKDIR /root/data/
+# RUN cp -a /var/log/ /root/data/
+# RUN cp -a /home/ /root/data/
+# RUN cp -a /git/ /root/data/
 
 CMD ["/usr/local/bin/init.sh"]
 #CMD ["/sbin/init"]

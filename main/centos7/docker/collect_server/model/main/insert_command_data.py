@@ -87,12 +87,22 @@ def insert_history_data(db_con_history, file_path, file_path_list):
                 elif j % 3 == 2:
                     # print('time_afer_execution: ' + l[-1])
                     time_afer_execution = int(l[-1])
-                    # データベースに挿入する値を辞書型で定義
-                    row_num = int((i-j)/3)
+
+                    '''
+                    引数から取得したfile_pathの値がDBにあるかどうかを確認
+                    1. DBでfile_pathをfindする
+                    if file_pathがDB上にない:
+                    2. このfile_pathをDB上に追加
+                    3. このfile_pathの_idを記録
+                    4. 以下の処理を行い_idのドキュメントにログ収集結果を追加
+                    '''
+
+                    row_num = i
                     res = db_con_history.find(
                         {'row_num': row_num}, limit=1, count=True)
                     # print(res)
                     if not res:
+                        # データベースに挿入する値を辞書型で定義
                         dic = {
                             'row_num': row_num,
                             'file_path': file_path,
@@ -107,15 +117,14 @@ def insert_history_data(db_con_history, file_path, file_path_list):
                         }
                         # print()
                         # print(dic)
-                        # db_con_history.insert(dic)
+                        db_con_history.insert(dic)
 
 
 def containsControlCharacter(s):
     return any(map(lambda c: category(c) == 'Cc', s))
 
+
 # scriptのデータをDBに追加
-
-
 def insert_script_data(db_con_script, file_path, file_path_list):
     # group番号を取得
     group = int(file_path_list[3])
@@ -126,14 +135,14 @@ def insert_script_data(db_con_script, file_path, file_path_list):
     # print(unixtime)
 
     # ファイル名を取得
-    file_name = file_path_list[7]
+    file_name = file_path_list[8]
     # print(file_name)
 
     # (unixtime)_root.logファイルを読み込み
     lines = script_file_read(file_path)
     executed_time = 0
     result = []
-    for i, line in enumerate(lines[1:]):
+    for i, line in enumerate(lines):
 
         line_split = line.split(' ')
 
@@ -144,27 +153,39 @@ def insert_script_data(db_con_script, file_path, file_path_list):
                 print(executed_time)
                 print(result)
                 print(line)
-                # for res in result:
-                #     r = [ca.ctrl(c) for c in res]
-                #     print(r)
-                dic = {
-                    'file_path': file_path,
-                    'group': group,
-                    'id': id,
-                    'collect_time': unixtime,
-                    'executed_time': executed_time,
-                    'result': result
-                }
-                print(dic)
-                db_con_script.insert(dic)
-                result = []
 
-                # 新しいコマンド実行時刻を保持
+                '''
+                引数から取得したfile_pathの値がDBにあるかどうかを確認
+                1. DBでfile_pathをfindする
+                if file_pathがDB上にない:
+                2. このfile_pathをDB上に追加
+                3. このfile_pathの_idを記録
+                4. 以下の処理を行い_idのドキュメントにログ収集結果を追加
+                '''
+
+                res = db_con_script.find(
+                    {'row_num': i, 'file_name': file_name}, limit=1, count=True)
+                if not res:
+                    dic = {
+                        'row_num': i,
+                        'file_name': file_name,
+                        'file_path': file_path,
+                        'group': group,
+                        'id': id,
+                        'collect_time': unixtime,
+                        'executed_time': executed_time,
+                        'result': result
+                    }
+                    print(dic)
+                    db_con_script.insert(dic)
+                    result = []
+
+            # 新しいコマンド実行時刻を保持
             executed_time = int(line_split[0])
             # 新しいコマンドの実行結果を保持
             result.append(' '.join(line_split[1:]))
-        # 時刻情報でない時resultにline(時刻を含まない実行)を追加する
         else:
+            # 時刻情報でない時resultにline(時刻を含まない実行)を追加する
             result.append(line)
             continue
 
@@ -178,13 +199,6 @@ def main(argv):
     # DBを接続し、コレクションを作成
     db_con_history = DBController(db_name, db_col_history)
     db_con_script = DBController(db_name, db_col_script)
-
-    # 引数から取得したfile_pathの値がDBにあるかどうかを確認
-    # 1. DBでfile_pathをfindする
-    # if file_pathがDB上にない:
-    #    2. このfile_pathをDB上に追加
-    #    3. このfile_pathの_idを記録
-    #    4. 以下の処理を行い_idのドキュメントにログ収集結果を追加
 
     # ファイルのパスを/で分割し、リスト化する
     file_path_list = file_path.split('/')

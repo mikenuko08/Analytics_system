@@ -1,3 +1,5 @@
+#!/bin/bash
+SCRIPT_DIR=`dirname $0`
 while read row;
 do
 ipaddress=`echo ${row} | cut -d , -f 2`
