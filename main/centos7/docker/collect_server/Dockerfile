@@ -4,6 +4,13 @@ FROM centos:7
 RUN yum update -y
 RUN yum -y install gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker autoconf wget make which iproute sudo cronie
 
+# install chrome
+COPY ./log_collect/main/selenium/google.chrome.repo /etc/yum.repos.d/
+RUN yum -y install google-chrome-stable 
+
+# install Japanese font
+RUN yum -y install ipa-gothic-fonts ipa-mincho-fonts ipa-pgothic-fonts ipa-pmincho-fonts
+
 # change UTC to JST
 RUN ln -sf  /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 

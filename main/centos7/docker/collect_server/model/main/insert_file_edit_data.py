@@ -76,6 +76,7 @@ def insert_fileEdit_data(db_con_fileEdit, file_path, file_path_list):
 
             if not res:
                 dic = {
+                    'id': studentID,
                     'committed_date': item.committed_date,
                     'hexsha': item.hexsha
                 }

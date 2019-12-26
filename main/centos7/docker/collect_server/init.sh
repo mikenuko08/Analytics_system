@@ -7,6 +7,7 @@ first(){
     #python3.6 configuration"
     #ln -s /usr/bin/python3.6 /usr/bin/python3
     #ln -s /usr/bin/pip3.6 /usr/bin/pip3
+    mkdir ~/log
     pip3 install fabric
     pip3 install pandas
     pip3 install flask
@@ -14,8 +15,11 @@ first(){
     pip3 install flask-pymongo
     pip3 install python-dateutil
     pip3 install python-dotenv
-    pip3 install selenium pyvirtualdisplay
+    pip3 install pyvirtualdisplay
     pip3 install GitPython
+    pip3 install sklearn
+    pip3 install selenium 
+    pip3 install chromedriver-binary
 }
 
 init(){

@@ -33,7 +33,7 @@ def run_local_cmd(id, df, host, group, con, cmd, step):
 
 def check_server_status(key, st, host_addr, group):
     df = pd.DataFrame(index=[], columns=["unixtime", "id","host", "group", "command", "stdout", "stderr", "step"])
-    command_id = st['command_id']
+    # command_id = st['command_id']
     run_type = st['run_type']
     command = st['command']
 
@@ -51,7 +51,7 @@ def check_server_status(key, st, host_addr, group):
             c = Connection(host=h, user="logger", port=22, connect_timeout=2, connect_kwargs={"key_filename": key})
             print("Connected host: "+h)
 
-            backup_dir = settings.SYSTEM_LOG + group + "/status/" + command_id
+            backup_dir = settings.SYSTEM_LOG + group + "/status/"
             c.local("mkdir -p "+backup_dir, warn=True)
             print("Created backup_dir locally: "+backup_dir)
 
@@ -97,21 +97,24 @@ if __name__ == '__main__':
 
     try:
         status = pd.read_csv(settings.SYSTEM_PATH + "/status_list.csv")
-        host_df = pd.read_csv(settings.SYSTEM_PATH + "/ip_address.csv")
+        host_df = pd.read_csv(settings.SYSTEM_PATH +  "/ip_address.csv")
 
         print("--------------- Start collect log function ---------------")
         # sort option is added for avoiding FutureWarning
+        df = pd.DataFrame(index=[],columns=["unixtime","id","host","group","command","stdout","stderr","step"]) #Empty dataframe
         for i, st in status.iterrows():
-            df = pd.DataFrame(index=[],columns=["unixtime","id","host","group","command","stdout","stderr","step"]) #Empty dataframe
+            # df = pd.DataFrame(index=[],columns=["unixtime","id","host","group","command","stdout","stderr","step"]) #Empty dataframe
             command_id = st['command_id']
             command = st['command']
             print("--------------- server status command ---------------")
             print(command_id + ": " + command)
             print()
             df = df.append(check_server_status(key, st, host_df, group), ignore_index=True, sort=False)
-            record_date = datetime.now().strftime('%s')
-            df.to_csv(settings.SYSTEM_LOG + group + "/status/" + command_id + "/" + record_date + ".tsv", sep='\t', encoding='utf-8', quotechar='\'')
-            # host_df.to_csv(record_date+".csv",sep=',', encoding='utf-8',quotechar='\'')
+            # record_date = datetime.now().strftime('%s')
+            # df.to_csv(settings.SYSTEM_LOG + group + "/status/" + command_id + "/" + record_date + ".tsv", sep='\t', encoding='utf-8', quotechar='\'')
+        record_date = datetime.now().strftime('%s')
+        df.to_csv(settings.SYSTEM_LOG + group + "/status/" + record_date + ".tsv", sep='\t', encoding='utf-8', quotechar='\'')
+        # host_df.to_csv(record_date+".csv",sep=',', encoding='utf-8',quotechar='\'')
 
         print("--------------- Finish collect log function ---------------")
         print()

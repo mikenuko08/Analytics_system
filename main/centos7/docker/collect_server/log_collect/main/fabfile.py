@@ -154,7 +154,7 @@ if __name__ == '__main__':
     key = settings.SYSTEM_PATH + "/keys/id_rsa.pub"
     
     # try:
-    host_df = pd.read_csv(settings.SYSTEM_PATH+"/ip_address.csv")
+    host_df = pd.read_csv(settings.SYSTEM_PATH+"/ip_address.csv", chunksize=10)
     df = pd.DataFrame(index=[],columns=["unixtime","id","host","group","command","stdout","stderr","step"]) #Empty dataframe
     #sort option is added for avoiding FutureWarning
     df = df.append(check_server_status(key, host_df, group), ignore_index=True, sort=False)

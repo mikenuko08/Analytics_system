@@ -7,6 +7,8 @@ import tarfile
 from unicodedata import category
 import curses.ascii as ca
 
+import html
+
 # DB名/コレクション名
 db_name = "students"
 db_col_history = "command_history"
@@ -174,7 +176,7 @@ def insert_script_data(db_con_script, file_path, file_path_list):
                         'id': id,
                         'collect_time': unixtime,
                         'executed_time': executed_time,
-                        'result': result
+                        'result': html.escape(str(result))
                     }
                     print(dic)
                     db_con_script.insert(dic)

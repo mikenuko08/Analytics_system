@@ -1,18 +1,70 @@
 version: "3"
 services:
-  logger_server:
+  logger_server001:
     build: logger_server/.
     image: logger_server
-    hostname: logger_server
-    container_name: logger_server
+    hostname: logger_server001
+    container_name: logger_server001
     tty: true
     privileged: true
     networks:
       - logger-collect-network
     ports:
-      - "22:22"
-      - "80:80"
-      - "443:443"
+      - "2201:22"
+      - "8001:80"
+      - "44301:443"
+  logger_server002:
+    build: logger_server/.
+    image: logger_server
+    hostname: logger_server002
+    container_name: logger_server002
+    tty: true
+    privileged: true
+    networks:
+      - logger-collect-network
+    ports:
+      - "2202:22"
+      - "8002:80"
+      - "44302:443"
+  logger_server003:
+    build: logger_server/.
+    image: logger_server
+    hostname: logger_server003
+    container_name: logger_server003
+    tty: true
+    privileged: true
+    networks:
+      - logger-collect-network
+    ports:
+      - "2203:22"
+      - "8003:80"
+      - "44303:443"
+  logger_server004:
+    build: logger_server/.
+    image: logger_server
+    hostname: logger_server004
+    container_name: logger_server004
+    tty: true
+    privileged: true
+    networks:
+      - logger-collect-network
+    ports:
+      - "2204:22"
+      - "8004:80"
+      - "44304:443"
+  logger_server005:
+    build: logger_server/.
+    image: logger_server
+    hostname: logger_server005
+    container_name: logger_server005
+    tty: true
+    privileged: true
+    networks:
+      - logger-collect-network
+    ports:
+      - "2205:22"
+      - "8005:80"
+      - "44305:443"
   collect_server:
     build: collect_server/.
     image: collect_server
@@ -70,6 +122,8 @@ services:
       - logger-collect-network
   gitbucket:
     image: gitbucket/gitbucket
+    hostname: gitbucket
+    container_name: gitbucket
     restart: always
     ports:
       - 8080:8080

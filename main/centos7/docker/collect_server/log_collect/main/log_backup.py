@@ -155,7 +155,7 @@ def get_all_logs(key, host_addr, group):
                   "/script.tar.gz -C /var/log/ script", warn=True)
             print("Created script.tar.gz on remote")
 
-            c.get("/home/logger/log/script.tar.gz",
+            c.get(logger_dir + "/script.tar.gz",
                   command_backup_dir + "/script.tar.gz")
             print("Get script.tar.gz on remote")
 

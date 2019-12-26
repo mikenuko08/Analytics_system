@@ -32,26 +32,48 @@ class DBController:
         self.database = self.client[self.db][self.col]
         return self.database.insert(dict)
 
-    def find(self, dict={}, limit=0, count=False):
+    def find(self, dict={}, limit=0, descending=False, field='', count=False):
         self.database = self.client[self.db][self.col]
-        if count and limit >= 1:
+        if limit >= 1 and descending and count:
+            result = self.database.find(dict).sort(
+                field, -1).limit(limit)
+            return result.count(True)
+
+        if limit >= 1 and descending:
+            result = self.database.find(dict).sort(
+                field, -1).limit(limit)
+            return result
+        elif limit >= 1 and count:
             result = self.database.find(dict).limit(limit)
             return result.count(True)
+        elif descending and count:
+            result = self.database.find(dict).sort(
+                field, -1)
+            return result.count(True) 
+        elif limit >= 1:
+            return self.database.find(dict).limit(limit)
+        elif descending:
+            result = self.database.find(dict).sort(
+                field, -1)
+            return result
         elif count:
             result = self.database.find(dict)
             return result.count(True)
-        elif limit >= 1:
-            return self.database.find(dict).limit(limit)
         return self.database.find(dict)
 
-    def distinct(self, feild):
+    def distinct(self, field):
         self.database = self.client[self.db][self.col]
-        return self.database.distinct(feild)
+        # if descending:
+        #     result = self.database.distinct(field).sort(
+        #         field, -1)
+        #     return result
+        return self.database.distinct(field)
 
 
 # if __name__ == "__main__":
-#     dic = {"name": "sato"}
-#     st = DBController("students", "status")
-#     st.insert(dic)
-#     print(len(list(st.find())))
-#     print(st.distinct("name"))
+    # dic = {"name": "kanou"}
+    # st = DBController("students", "status")
+    # st.insert(dic)
+    # # for s in st.find({'name': 'sato'}, 1, True, '_id'):
+    # #     print(s)
+    # print(st.distinct("name"))
