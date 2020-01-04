@@ -229,6 +229,8 @@ def insert_analysisStatus_data(status_col, status_analysis_col, analysis_field, 
     pre_detail_collection_time = []
     pre_list = []
     update_time = [0 for i in range(student_num)]
+    update_time_diff = []
+    update_time_average = []
     min_index = -1
     max_index = -1
 
@@ -277,7 +279,7 @@ def insert_analysisStatus_data(status_col, status_analysis_col, analysis_field, 
             pre_clustering = data_analysis(student_num, pre)
             print(pre_clustering)
 
-            ##### 3. 最新の分析データとクラスタリングデータを比較し、違いがあればupdateTimeを変更 #####
+            ##### 3. 最新と一つ前のののクラスタリングデータを比較し、違いがあればupdateTimeを変更 #####
             update_time = get_database_list(
                 status_analysis_col, step, pre_time, feild='update_time')
             update_time = update_time[0]
@@ -296,13 +298,13 @@ def insert_analysisStatus_data(status_col, status_analysis_col, analysis_field, 
 
             # 4-1. クラスタリングされたグループ間のupdateTimeで平均値を取る
 
-            # 標準出力のupdate_timeの平均値のリスト
+            # analysis_fieldのupdate_timeの平均値のリスト
             update_time_average = update_time_average_list(
                 leatest_clustering, update_time_diff)
 
             # 4-2. 平均値が最も低いグループを課題が進んでいないグループとして記録
 
-            # 標準出力の分析結果処理
+            # analysis_fieldの分析結果処理
             min_index = update_time_average.index(
                 min(update_time_average))
             print('clustering_update_time_average_min_index: ', end="")
@@ -321,6 +323,9 @@ def insert_analysisStatus_data(status_col, status_analysis_col, analysis_field, 
             'step': step,
             'collection_time': collection_time,
             'update_time': update_time,
+            'leatest_clustering': leatest_clustering,
+            'update_time_diff': update_time_diff,
+            'update_time_average': update_time_average,
             'average_min_index': min_index,
             'average_max_index': max_index,
         }
