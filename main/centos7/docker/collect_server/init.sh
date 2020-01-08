@@ -13,6 +13,8 @@ first(){
     pip3 install flask
     pip3 install flask-bootstrap
     pip3 install flask-pymongo
+    pip3 install flask-restful
+    pip3 install flask-cors
     pip3 install python-dateutil
     pip3 install python-dotenv
     pip3 install pyvirtualdisplay

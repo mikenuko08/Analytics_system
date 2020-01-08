@@ -80,17 +80,7 @@ services:
       - logger-collect-network
     ports:
       - "23:22"
-      - "5000:5000"
-  httpd:
-    image: httpd
-    restart: always
-    hostname: httpd
-    container_name: httpd
-    volumes:
-      - ./web/Viewer/Visualize:/usr/local/apache2/htdocs/
-    networks:
-      - logger-collect-network
-    ports:
+      - "5001:5000"
       - "81:80"
   mongo:
     image: mongo

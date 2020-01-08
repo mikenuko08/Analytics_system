@@ -2,7 +2,7 @@ FROM centos:7
 
 # update yum package and install essential software
 RUN yum update -y
-RUN yum -y install gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker autoconf wget make which iproute sudo cronie
+RUN yum -y install gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker autoconf wget make which iproute sudo httpd cronie
 
 # install chrome
 COPY ./log_collect/main/selenium/google.chrome.repo /etc/yum.repos.d/

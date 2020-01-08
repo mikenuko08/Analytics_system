@@ -26,8 +26,5 @@ sudo cat /$TARGET/.command_history
 echo '--------- finish ---------'
 exit
 EOF
-ssh -t -t $TARGET@${ipaddress} << EOF
-exit
-EOF
 fi
 done < /root/log_collect/main/ip_address.csv
