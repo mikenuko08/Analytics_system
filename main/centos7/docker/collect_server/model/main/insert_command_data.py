@@ -52,17 +52,18 @@ def open_tarfile(file_path):
 
 
 # .command_historyのデータをDBに追加
-def insert_history_data(db_con_history, file_path, file_path_list):
+def insert_history_data(db_con_history, file_path, file_path_split_list):
+
     # group番号を取得
-    group = int(file_path_list[3])
+    group = int(file_path_split_list[3])
     # 学生番号 idを取得
-    id = file_path_list[5]
-    # unixtimeを取得
-    unixtime = int(file_path_list[6])
-    # print(unixtime)
+    id = file_path_split_list[5]
+    # collect_timeを取得
+    collect_time = int(file_path_split_list[6])
+    # print(collect_time)
 
     # ファイル名を取得
-    file_name = file_path_list[7]
+    file_name = file_path_split_list[7]
     # print(file_name)
 
     # .command_historyファイルを読み込み
@@ -88,7 +89,7 @@ def insert_history_data(db_con_history, file_path, file_path_list):
                     pwd = l[-1]
                 elif j % 3 == 2:
                     # print('time_afer_execution: ' + l[-1])
-                    time_afer_execution = int(l[-1])
+                    time_after_execution = int(l[-1])
 
                     '''
                     引数から取得したfile_pathの値がDBにあるかどうかを確認
@@ -100,19 +101,36 @@ def insert_history_data(db_con_history, file_path, file_path_list):
                     '''
 
                     row_num = i
-                    res = db_con_history.find(
-                        {'row_num': row_num}, limit=1, count=True)
-                    # print(res)
-                    if not res:
+
+                    collection_time_list = list(
+                        db_con_history.distinct('collection_time'))
+                    print(collection_time_list)
+                    collect_time_flag = collect_time not in collection_time_list
+                    print(collect_time_flag)
+
+                    time_before_execution_list = list(
+                        db_con_history.distinct('time_before_execution'))
+                    print(time_before_execution_list)
+                    time_before_execution_flag = time_before_execution not in time_before_execution_list
+                    print(time_before_execution_flag)
+
+                    time_after_execution_list = list(
+                        db_con_history.distinct('time_after_execution'))
+                    print(time_after_execution_list)
+                    time_after_execution_flag = time_after_execution not in time_after_execution_list
+                    print(time_after_execution_flag)
+
+                    if collect_time_flag and time_before_execution_flag or time_after_execution_flag:
+
                         # データベースに挿入する値を辞書型で定義
                         dic = {
                             'row_num': row_num,
                             'file_path': file_path,
                             'group': group,
                             'id': id,
-                            'collect_time': unixtime,
+                            'collect_time': collect_time,
                             'time_before_execution': time_before_execution,
-                            'time_afer_execution': time_afer_execution,
+                            'time_after_execution': time_after_execution,
                             'pwd': pwd,
                             'command': command,
                             'status_code': status_code

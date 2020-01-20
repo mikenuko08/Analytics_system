@@ -100,4 +100,4 @@ RUN visudo -c
 # RUN cp -a /git/ /root/data/
 
 CMD ["/usr/local/bin/init.sh"]
-#CMD ["/sbin/init"]
+#CMD ["/sbin/init"]z

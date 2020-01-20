@@ -39,32 +39,6 @@ services:
       - "2203:22"
       - "8003:80"
       - "44303:443"
-  logger_server004:
-    build: logger_server/.
-    image: logger_server
-    hostname: logger_server004
-    container_name: logger_server004
-    tty: true
-    privileged: true
-    networks:
-      - logger-collect-network
-    ports:
-      - "2204:22"
-      - "8004:80"
-      - "44304:443"
-  logger_server005:
-    build: logger_server/.
-    image: logger_server
-    hostname: logger_server005
-    container_name: logger_server005
-    tty: true
-    privileged: true
-    networks:
-      - logger-collect-network
-    ports:
-      - "2205:22"
-      - "8005:80"
-      - "44305:443"
   collect_server:
     build: collect_server/.
     image: collect_server
@@ -76,6 +50,7 @@ services:
       - ./collect_server/log_collect/:/root/log_collect
       - ./collect_server/model/:/root/model
       - ./collect_server/web/:/root/web
+      - ./collect_server/web2/:/root/web2
     networks:
       - logger-collect-network
     ports:

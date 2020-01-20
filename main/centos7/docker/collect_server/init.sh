@@ -22,6 +22,7 @@ first(){
     pip3 install sklearn
     pip3 install selenium 
     pip3 install chromedriver-binary
+    pip3 install mod_wsgi
 }
 
 init(){
@@ -34,6 +35,8 @@ if [ ! -r /var/log/docker_container ] ; then
     first
     systemctl start crond
     systemctl enable crond
+    systemctl start httpd
+    systemctl enable httpd
     # systemctl start lsyncd
     # systemctl enable lsyncd
 fi

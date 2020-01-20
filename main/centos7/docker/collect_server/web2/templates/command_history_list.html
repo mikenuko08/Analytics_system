@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+        integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link href="https://unpkg.com/bootstrap-table@1.15.4/dist/bootstrap-table.min.css" rel="stylesheet">
+    <link href="https://s3-us-west-2.amazonaws.com/colors-css/2.2.0/colors.min.css" rel="stylesheet">
+    <title>Status Page</title>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
+    </script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.4/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.4/dist/bootstrap-table-locale-all.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.4/dist/extensions/cookie/bootstrap-table-cookie.min.js">
+    </script>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">可視化環境</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <section>
+            <div class="mt-5 mb-5">
+                <label for="table" class="h5">コマンド実行履歴</label>
+                <table id="table" data-toggle="table" data-search="true" data-show-toggle="true"
+                    data-show-columns="true" data-thead-classes="thead-dark" data-locale="ja-JP" data-cookie="true"
+                    data-cookie-id-table="saveId" data-row-style="rowStyle">
+                    <thead>
+                        <tr>
+                            <th data-field="collect_time" data-formatter="timeFormatter" data-sortable="true">収集時刻</th>
+                            <th data-field="pwd">実行パス</th>
+                            <th data-field="command">実行コマンド</th>
+                            <th data-field="executed_result">実行結果</th>
+                            <th data-field="status_code">ステータスコード</th>
+                            <th data-field="file_edit">ファイル編集履歴</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+
+    </footer>
+    <script>
+        function dateToFormatString(date, fmt, locale, pad) {
+            // %fmt% を日付時刻表記に。
+            // 引数
+            //  date:  Dateオブジェクト
+            //  fmt:   フォーマット文字列、%YYYY%年%MM%月%DD%日、など。
+            //  locale:地域指定。デフォルト（入力なし）の場合はja-JP（日本）。現在他に対応しているのはen-US（英語）のみ。
+            //  pad:   パディング（桁数を埋める）文字列。デフォルト（入力なし）の場合は0。
+            // 例：2016年03月02日15時24分09秒
+            // %YYYY%:4桁年（2016）
+            // %YY%:2桁年（16）
+            // %MMMM%:月の長い表記、日本語では数字のみ、英語ではMarchなど（3）
+            // %MMM%:月の短い表記、日本語では数字のみ、英語ではMar.など（3）
+            // %MM%:2桁月（03）
+            // %M%:月（3）
+            // %DD%:2桁日（02）
+            // %D%:日（2）
+            // %HH%:2桁で表した24時間表記の時（15）
+            // %H%:24時間表記の時（15）
+            // %h%:2桁で表した12時間表記の時（03）
+            // %h%:12時間表記の時（3）
+            // %A%:AM/PM表記（PM）
+            // %A%:午前/午後表記（午後）
+            // %mm%:2桁分（24）
+            // %m%:分（24）
+            // %ss%:2桁秒（09）
+            // %s%:秒（9）
+            // %W%:曜日の長い表記（水曜日）
+            // %w%:曜日の短い表記（水）
+            var padding = function (n, d, p) {
+                p = p || '0';
+                return (p.repeat(d) + n).slice(-d);
+            };
+            var DEFAULT_LOCALE = 'ja-JP';
+            var getDataByLocale = function (locale, obj, param) {
+                var array = obj[locale] || obj[DEFAULT_LOCALE];
+                return array[param];
+            };
+            var format = {
+                'YYYY': function () {
+                    return padding(date.getFullYear(), 4, pad);
+                },
+                'YY': function () {
+                    return padding(date.getFullYear() % 100, 2, pad);
+                },
+                'MMMM': function (locale) {
+                    var month = {
+                        'ja-JP': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                        'en-US': ['January', 'February', 'March', 'April', 'May', 'June',
+                            'July', 'August', 'September', 'October', 'November', 'December'
+                        ],
+                    };
+                    return getDataByLocale(locale, month, date.getMonth());
+                },
+                'MMM': function (locale) {
+                    var month = {
+                        'ja-JP': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                        'en-US': ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'June',
+                            'July', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'
+                        ],
+                    };
+                    return getDataByLocale(locale, month, date.getMonth());
+                },
+                'MM': function () {
+                    return padding(date.getMonth() + 1, 2, pad);
+                },
+                'M': function () {
+                    return date.getMonth() + 1;
+                },
+                'DD': function () {
+                    return padding(date.getDate(), 2, pad);
+                },
+                'D': function () {
+                    return date.getDate();
+                },
+                'HH': function () {
+                    return padding(date.getHours(), 2, pad);
+                },
+                'H': function () {
+                    return date.getHours();
+                },
+                'hh': function () {
+                    return padding(date.getHours() % 12, 2, pad);
+                },
+                'h': function () {
+                    return date.getHours() % 12;
+                },
+                'mm': function () {
+                    return padding(date.getMinutes(), 2, pad);
+                },
+                'm': function () {
+                    return date.getMinutes();
+                },
+                'ss': function () {
+                    return padding(date.getSeconds(), 2, pad);
+                },
+                's': function () {
+                    return date.getSeconds();
+                },
+                'A': function () {
+                    return date.getHours() < 12 ? 'AM' : 'PM';
+                },
+                'a': function (locale) {
+                    var ampm = {
+                        'ja-JP': ['午前', '午後'],
+                        'en-US': ['am', 'pm'],
+                    };
+                    return getDataByLocale(locale, ampm, date.getHours() < 12 ? 0 : 1);
+                },
+                'W': function (locale) {
+                    var weekday = {
+                        'ja-JP': ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
+                        'en-US': ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
+                            'Saturday'
+                        ],
+                    };
+                    return getDataByLocale(locale, weekday, date.getDay());
+                },
+                'w': function (locale) {
+                    var weekday = {
+                        'ja-JP': ['日', '月', '火', '水', '木', '金', '土'],
+                        'en-US': ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'],
+                    };
+                    return getDataByLocale(locale, weekday, date.getDay());
+                },
+            };
+            var fmtstr = ['']; // %%（%として出力される）用に空文字をセット。
+            Object.keys(format).forEach(function (key) {
+                fmtstr.push(key); // ['', 'YYYY', 'YY', 'MMMM',... 'W', 'w']のような配列が生成される。
+            })
+            var re = new RegExp('%(' + fmtstr.join('|') + ')%', 'g');
+            // /%(|YYYY|YY|MMMM|...W|w)%/g のような正規表現が生成される。
+            var replaceFn = function (match, fmt) {
+                // match には%YYYY%などのマッチした文字列が、fmtにはYYYYなどの%を除くフォーマット文字列が入る。
+                if (fmt === '') {
+                    return '%';
+                }
+                var func = format[fmt];
+                // fmtがYYYYなら、format['YYYY']がfuncに代入される。つまり、
+                // function() { return padding(date.getFullYear(), 4, pad); }という関数が代入される。
+                if (func === undefined) {
+                    //存在しないフォーマット
+                    return match;
+                }
+                return func(locale);
+            };
+            return fmt.replace(re, replaceFn);
+        }
+
+        function timeFormatter(value) {
+            return dateToFormatString(new Date(value * 1000), '%YYYY%年%MM%月%DD%日 (%w%) %HH%時%mm%分%ss%秒');
+        }
+
+        function htmlspecialchars(str) {
+            return (str + '').replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function stdoutFormatter(value) {
+            return htmlspecialchars(value);
+        }
+
+        function detailFormatter(value) {
+            return
+        }
+
+        function rowStyle(row, index) {
+            // console.log(data2['leatest_clustering'])
+            if (row['analysis'] == 0) {
+                return {
+                    classes: 'bg-warning'
+                }
+            } else if (row['analysis'] == 1) {
+                return {
+                    classes: 'bg-success'
+                }
+            } else if (row['analysis'] == 2) {
+                return {
+                    classes: 'bg-green'
+                }
+            }
+            return {
+                classes: ''
+            }
+        }
+
+        function pattern_replace(str) {
+            var pat = '[&#x27;';
+            var pat2 = '\x1b[?1034h';
+            var pat3 = '&#x27;]';
+
+            str = str.replace(pat, '');
+            str = str.replace(pat2, '');
+            str = str.replace(pat3, '');
+
+            return str;
+        }
+
+        // axios.get('http://192.168.1.141:81/api/command_history')
+        //     //thenで成功した場合
+        //     .then(function (response) {
+        //         console.log(response);
+        //         var data = response['data'];
+        //         var ult = data['url'];
+        //         data[index]['file_edit'] =
+        //             '<a href="http://192.168.1.141:81/"' + ulr + '>詳細</a>'
+        //         $('#table').bootstrapTable('load', data);
+        //     })
+        //     //chachでエラーの挙動を定義
+        //     .catch(function (error) {
+        //         console.log(error);
+        //     });
+
+        var res = {{res | tojson}};
+        var command_history = res['command_history'];
+        var command_script = res['command_script'];
+        var file_edit = res['file_edit'];
+        // console.log(command_history);d
+        // console.log(file_edit);
+
+        for (let i = 0; i < command_history.length - 1; i++) {
+            // console.log(command_history[i]['collect_time']);
+            // console.log(command_history[i]['time_after_execution']);
+
+            // console.log(command_history[i]['time_before_execution']);
+            // console.log(command_history[i+1]['time_before_execution']);
+            var now_time = command_history[i]['time_before_execution'];
+            var next_time = command_history[i + 1]['time_before_execution'];
+
+            for (let j = 0; j < file_edit.length; j++) {
+
+                var cs_time = command_script[j]['executed_time'];
+
+                if (now_time <= cs_time && next_time >= cs_time) {
+                    var cs = command_script[j]['result'];
+                    cs = pattern_replace(cs);
+                    command_history[i]['executed_result'] = cs;
+                }
+
+                var fi_time = file_edit[j]['committed_date'];
+                var fi_id = file_edit[j]['id'];
+                var fi_hexsha = file_edit[j]['hexsha'];
+
+                var url = 'http://192.168.0.2:8080/root/' + fi_id + '/commit/' + fi_hexsha;
+
+                if (now_time <= fi_time && next_time >= fi_time) {
+                    console.log(fi_time);
+                    command_history[i]['file_edit'] = '<a href="' + url + '" target="_blank">詳細</a>'
+                }
+            }
+        }
+        // console.log(data);
+
+
+        $(function () {
+            $('#table').bootstrapTable('load', command_history);
+        });
+    </script>
+</body>
+
+</html>

@@ -55,10 +55,10 @@ def get_git_logs(key, host_addr, group):
             # c.run("mkdir -p "+backup_dir, warn=True)
             # print("Create backup_dir on remote: "+backup_dir)
 
-            c.run("tar czf /root/git.tar.gz"+" -C / git", warn=True)
+            c.run("tar czf /root/git.tar.gz -C / git", warn=True)
             print("Create git.tar.gz on remote")
 
-            c.get("/root/git.tar.gz", backup_dir+"/git.tar.gz")
+            c.get("/root/git.tar.gz " + backup_dir+"/git.tar.gz")
             print("Get git.tar.gz on remote")
 
             c.run("rm -rf /root/git.tar.gz", warn=True)

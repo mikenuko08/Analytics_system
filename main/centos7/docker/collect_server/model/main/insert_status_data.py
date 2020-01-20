@@ -45,31 +45,39 @@ def insert_status_data(status_col, file_path):
     df = pd.read_csv(file_path, delimiter="\t",
                      quotechar='\'', index_col=0)
 
-    # print(df.fillna("NaN"))
-    for row in df.itertuples():
-        '''
-        引数から取得したfile_pathの値がDBにあるかどうかを確認
-        1. DBでfile_pathをfindする
-        if file_pathがDB上にない:
-        2. このfile_pathをDB上に追加
-        3. このfile_pathの_idを記録
-        4. 以下の処理を行い_idのドキュメントにログ収集結果を追加
-        '''
+    file_path_list = list(status_col.distinct('file_path'))
+    print(file_path_list)
 
-        # データベースに挿入する値を辞書型で定義
-        dic = {
-            'file_path': file_path,
-            'id': int(row.id),
-            'host': row.host,
-            'group': int(row.group),
-            'command': row.command,
-            'stdout': html.escape(str(row.stdout)),
-            'stderr': html.escape(str(row.stderr)),
-            'step': row.step,
-            'detail_collection_time': int(row.unixtime),
-            'collection_time': collection_time,
-        }
-        status_col.insert(dic)
+    if not file_path in file_path_list:
+        # print(df.fillna("NaN"))
+        # df = df.replace({'nan': pd.np.nan})
+        for row in df.itertuples():
+            '''
+            引数から取得したfile_pathの値がDBにあるかどうかを確認
+            1. DBでfile_pathをfindする
+            if file_pathがDB上にない:
+            2. このfile_pathをDB上に追加
+            3. このfile_pathの_idを記録
+            4. 以下の処理を行い_idのドキュメントにログ収集結果を追加
+            '''
+
+            stdout = html.escape(str(row.stdout))
+            stderr = html.escape(str(row.stderr))
+
+            # データベースに挿入する値を辞書型で定義
+            dic = {
+                'file_path': file_path,
+                'id': int(row.id),
+                'host': row.host,
+                'group': int(row.group),
+                'command': row.command,
+                'stdout': stdout,
+                'stderr': stderr,
+                'step': row.step,
+                'detail_collection_time': int(row.unixtime),
+                'collection_time': collection_time,
+            }
+            status_col.insert(dic)
 
 
 # 必要なデータをDBから検索しリストを返す
@@ -81,7 +89,10 @@ def get_database_list(status_col, step, time, feild=''):
     # print(status_list)
 
     # 特定のフィールドの値のみを抽出
-    result = list(status[feild] for status in status_list)
+    if feild != '':
+        result = list(status[feild] for status in status_list)
+    else:
+        result = status_list
     print(result)
 
     return result
@@ -91,12 +102,11 @@ def get_database_list(status_col, step, time, feild=''):
 def data_transform(data_list):
     format_list = list(
         map(lambda s: html.escape(str(s)), data_list))
-    result_list = [result for result in format_list if re.sub(
-        r'[0-9]', "x", result)]
+    format_list = [re.sub(r'\d+', "x", l) for l in format_list]
 
-    # print('result_list: ', end="")
-    # print(result_list)
-    return result_list
+    print('format_list:')
+    print(format_list)
+    return format_list
 
  # 文字列をベクトル情報に変換処理
 
@@ -104,8 +114,8 @@ def data_transform(data_list):
 def data_transform_to_vector(data_list):
     vectorizer = TfidfVectorizer(stop_words='english')
     data_vector = vectorizer.fit_transform(data_list)
-    # print('vector: ', end="")
-    # print(vector)
+    # print('data_vector:')
+    # print(data_vector)
     return data_vector
 
 
@@ -129,67 +139,9 @@ def data_clustering(student_num, data_vector):
 
 
 # データ分析処理
-def data_analysis(student_num, data_list):
-    data = data_transform(data_list)
-    data_vector = data_transform_to_vector(data)
+def data_analysis(student_num, data_vector):
     clustering = data_clustering(student_num, data_vector)
     return clustering
-
-
-# クラスタリング結果のdiffを取り結果が異なれば、updatetimeを更新する
-def clustering_result_diff(update_time, pre_collection_time, leatest_collection_time, pre_clustering, leatest_clustering):
-    print(update_time)
-    print(pre_collection_time)
-    print(leatest_collection_time)
-    print(pre_clustering)
-    print(leatest_clustering)
-
-    if len(update_time) == 0:
-        update_time = pre_collection_time
-
-    for i, (result1, result2) in enumerate(zip(pre_clustering, leatest_clustering)):
-        print(update_time[i])
-        print(leatest_collection_time[i])
-        if result1 != result2:
-            update_time[i] = leatest_collection_time[i]
-        else:
-            update_time[i] = update_time[i]
-
-    return update_time
-
-
-def update_time_average_list(clustering_result, update_time):
-    # 標準出力のクラスタリング結果のset
-    clustering_set = set(clustering_result)
-    print('clustering_set: ', end="")
-    print(clustering_set)
-
-    # 標準出力のクラスタリング結果のupdate_timeの平均値
-    clustering_update_time_average_list = []
-
-    for clusterNum in clustering_set:
-        print('cluster_num: ', end="")
-        print(clusterNum)
-        # 同じ値でクラスタリングされたリストの平均値の抽出
-        clustering_update_list = [updateTime for updateTime, cluster in zip(
-            update_time, clustering_result) if cluster == clusterNum]
-        print('clustering_update_list: ', end="")
-        print(clustering_update_list)
-        # 抽出されたリストの合計
-        clusterUpdateSum = sum(clustering_update_list)
-        print('clusterUpdateSum: ', end="")
-        print(clusterUpdateSum)
-        # 抽出されたリストの要素数
-        clusterUpdateLen = len(clustering_update_list)
-        print('clusterUpdateLen: ', end="")
-        print(clusterUpdateLen)
-        # 抽出されたリストの平均値
-        clustering_update_time_average_list.append(
-            clusterUpdateSum/clusterUpdateLen)
-    print('clustering_update_time_average_list: ', end="")
-    print(clustering_update_time_average_list)
-
-    return clustering_update_time_average_list
 
 
 def insert_analysisStatus_data(status_col, status_analysis_col, analysis_field, file_path):
@@ -199,15 +151,15 @@ def insert_analysisStatus_data(status_col, status_analysis_col, analysis_field, 
 
     ##### 1. 最新のサーバ状況確認履歴の分析データを取得する #####
 
-    # DBからデータを収集した時刻を取得する
+    # 収集した時刻のリストを取得する
     collection_time_list = list(status_col.distinct('collection_time'))
     print('collection_time_list: ', end="")
     print(collection_time_list)
 
-    # 収集した時刻の数
-    collection_time_len = len(collection_time_list)
-    print('collection_time_len: ', end="")
-    print(collection_time_len)
+    # 収集した回数
+    collection_cnt = len(collection_time_list)
+    print('collection_cnt: ', end="")
+    print(collection_cnt)
 
     # サーバ状況確認コマンドのリストを取得
     step_list = list(status_col.distinct('step'))
@@ -218,118 +170,135 @@ def insert_analysisStatus_data(status_col, status_analysis_col, analysis_field, 
     student_num = len(student_list)
     print(student_num)
 
-    # 最新の時刻情報
+    # 最新の収集時刻
     leatest_time = collection_time_list[-1]
     print('leatest_time: ', end="")
     print(leatest_time)
 
-    # 収集した最新時刻
-    leatest_detail_collection_time = []
-    leatest_list = []
-    pre_detail_collection_time = []
-    pre_list = []
-    update_time = []
-    update_time_diff = []
-    update_time_average = []
-    analysis_result = []
-    min_index = -1
-    max_index = -1
-
-    # 収集したデータが2つ以上の時データを分析処理をする
-    if collection_time_len >= 2:
-        # 最新の一つ前の時刻情報
+    # 一つ前の収集時刻
+    if collection_cnt == 1:
+        pre_time = leatest_time
+    else:
         pre_time = collection_time_list[-2]
-        print('pre_time: ', end="")
-        print(pre_time)
+    print('pre_time: ', end="")
+    print(pre_time)
 
     for step in step_list:
         print('###### step: ' + step + ' ######')
 
         # 時刻情報の処理
-        # 最新収集詳細時刻のリスト
+        # 最新の詳細収集時刻のリスト
         print('leatest_collection_time')
-        leatest_collection_time = get_database_list(
+        leatest_detail_collection_time_list = get_database_list(
             status_col, step, leatest_time, feild='detail_collection_time')
 
-        # 収集したデータが2つ以上の時データを分析処理をする
-        if collection_time_len >= 2:
-            # 最新時刻よりひとつ前の収集時刻のリスト
-            print('pre_collection_time')
-            pre_collection_time = get_database_list(
-                status_col, step, pre_time, feild='detail_collection_time')
+        # 最新よりひとつ前の詳細収集時刻のリスト
+        print('pre_collection_time')
+        pre_detail_collection_time_list = get_database_list(
+            status_col, step, pre_time, feild='detail_collection_time')
 
-        ##### 2. 今回読み込まれたファイルのデータの値をクラスタリングする #####
+        ##### 2. データの値をクラスタリング処理 #####
 
         ##### 2-1. analysis_fieldのリストデータのクラスタリング処理 #####
-        # 最新のanalysis_fieldのリスト
+        # 最新時刻のanalysis_fieldのリスト
         print('leatest_list')
-        leatest = get_database_list(
+        leatest_list = get_database_list(
             status_col, step, leatest_time, feild=analysis_field)
+        leatest_list_format = data_transform(leatest_list)
+        leatest_list_vector = data_transform_to_vector(leatest_list)
+        # leatest_list_vector = [res for res in leatest_list_vector]
+        # print('data_vector:')
+        # print(leatest_list_vector)
+
         # 最新のanalysis_fieldのリストのクラスタリング
-        leatest_clustering = data_analysis(
-            student_num, leatest)
+        print('leatest_clustering')
+        leatest_clustering = data_analysis(student_num, leatest_list_vector)
         print(leatest_clustering)
 
-        # 収集したデータが2つ以上の時データを分析処理をする
-        if collection_time_len >= 2:
-            # 最新よりひとつ前の時刻のanalysis_fieldのリスト取得
-            print('pre_list')
-            pre = get_database_list(
-                status_col, step, pre_time, feild=analysis_field)
-            # 最新よりひとつ前のanalysis_fieldのリストのクラスタリング
-            pre_clustering = data_analysis(student_num, pre)
-            print(pre_clustering)
+        # 最新よりひとつ前の時刻のanalysis_fieldのリスト取得
+        print('pre_list')
+        pre_list = get_database_list(
+            status_col, step, pre_time, feild=analysis_field)
+        pre_list_format = data_transform(pre_list)
+        pre_list_vector = data_transform_to_vector(pre_list)
+        # pre_list_vector = [res for res in pre_list_vector]
+        # print('data_vector:')
+        # print(pre_list_vector)
 
-            ##### 3. 最新と一つ前のののクラスタリングデータを比較し、違いがあればupdateTimeを変更 #####
+        # 最新よりひとつ前のanalysis_fieldのリストのクラスタリング
+        # print('pre_clustering')
+        # pre_clustering = data_analysis(student_num, pre_list_vector)
+        # print(pre_clustering)
+
+        ##### 3. 最新と一つ前のののクラスタリングデータを比較し、違いがあればupdateTimeを変更 #####
+
+        print('update_time')
+        # 収集回数が一回目の時、update_timeの値を
+        if collection_cnt == 1:
+            update_time = leatest_detail_collection_time_list
+        else:
+            # 最新より一つ前のupdate_timeの値を取得
             update_time = get_database_list(
                 status_analysis_col, step, pre_time, feild='update_time')
             update_time = update_time[0]
-            print("update_time")
-            print(update_time)
-            print()
 
-            update_time_diff = clustering_result_diff(
-                update_time, pre_collection_time, leatest_collection_time, pre_clustering, leatest_clustering)
+            for i, (pre, leatest) in enumerate(zip(pre_list_format, leatest_list_format)):
+                if pre != leatest:
+                    update_time[i] = leatest_detail_collection_time_list[i]
+        print(update_time)
 
-            print("update_time_diff")
-            print(update_time_diff)
-            print()
+        ##### 4. 多数決処理を行う #####
 
-            ##### 4. 多数決処理を行う #####
+        # 4-1. クラスタリングされたグループ間のupdateTimeで平均値を取る
 
-            # 4-1. クラスタリングされたグループ間のupdateTimeで平均値を取る
+        # analysis_fieldのupdate_timeの平均値のリスト
+        update_time_average = []
+        clustering_cnt = []
+        print('set_leatest_clustering')
+        set_leatest_clustering = set(leatest_clustering)
+        print(set_leatest_clustering)
 
-            # analysis_fieldのupdate_timeの平均値のリスト
-            update_time_average = update_time_average_list(
-                leatest_clustering, update_time_diff)
+        for cluster_id in set_leatest_clustering:
+            up_time_list = []
+            cnt = 0
+            for (cluster, up_time_v) in zip(leatest_clustering, update_time):
+                if cluster_id == cluster:
+                    up_time_list.append(up_time_v)
+            cnt = len(up_time_list)
+            up_time_sum = sum(up_time_list)
+            ave = up_time_sum / cnt
+            update_time_average.append(ave)
+            clustering_cnt.append(cnt)
 
-            # 4-2. 平均値が最も低いグループを課題が進んでいないグループとして記録
+        # 4-2. 平均値が最も低いグループを課題が進んでいないグループとして記録
+        min_index = update_time_average.index(min(update_time_average))
 
-            # analysis_fieldの分析結果処理
-            min_index = update_time_average.index(min(update_time_average))
-            print('clustering_update_time_average_min_index: ', end="")
-            print(min_index)
+        # 4-3. min_indexを除く要素で最も要素数が多い添字をmax_indexに記録
+        max_v = -1
+        max_index = -1
+        for i, cnt in enumerate(clustering_cnt):
+            if i != min_index and cnt > max_v:
+                max_index = i
 
-            max_index = update_time_average.index(max(
-                update_time_average))
-            print('clustering_update_time_average_max_index: ', end="")
-            print(max_index)
-
-            
+        # 4-4. min_index, max_indexをもとに分析結果を記録
+        analysis_clustering = []
+        for cluster in leatest_clustering:
+            if cluster == min_index:
+                analysis_clustering.append(0)
+            elif cluster == max_index:
+                analysis_clustering.append(1)
+            else:
+                analysis_clustering.append(2)
 
         ##### 5. 読み込まれたクラスタリング結果をDBに入れる #####
 
         # データベースに挿入する値を辞書型で定義
         dic = {
-            'analysis_field': analysis_field,
             'step': step,
             'collection_time': collection_time,
+            'clustering': leatest_clustering,
             'update_time': update_time,
-            'leatest_clustering': leatest_clustering,
-            'update_time_diff': update_time_diff,
-            'update_time_average': update_time_average,
-            'average_min_index': min_index,
-            'average_max_index': max_index,
+            'analysis_clustering': analysis_clustering
         }
         status_analysis_col.insert(dic)
 

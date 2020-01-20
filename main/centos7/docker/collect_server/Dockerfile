@@ -2,7 +2,12 @@ FROM centos:7
 
 # update yum package and install essential software
 RUN yum update -y
-RUN yum -y install gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker autoconf wget make which iproute sudo httpd cronie
+RUN yum -y install gcc curl-devel expat-devel gettext-devel openssl-devel zlib-devel perl-ExtUtils-MakeMaker autoconf wget make which iproute sudo httpd httpd-devel cronie
+
+# configuration Apache
+RUN mkdir -p /var/www/html/flask_app
+COPY ./web2/wsgi.conf /etc/httpd/conf.d/
+COPY ./web2/ /var/www/html/flask_app/
 
 # install chrome
 COPY ./log_collect/main/selenium/google.chrome.repo /etc/yum.repos.d/
@@ -41,7 +46,7 @@ RUN mkdir -p /var/log/lsyncd
 
 # python3.6 install
 RUN yum install -y https://centos7.iuscommunity.org/ius-release.rpm
-RUN yum install -y python36u python36u-libs python36u-devel python36u-pip
+RUN yum install -y python36u python36u-libs python36u-devel python36u-pip python-devel
 
 # git setting
 RUN mkdir /git

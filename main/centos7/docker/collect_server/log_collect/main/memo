@@ -1,0 +1,14 @@
+サーバ状況確認コマンド
+Apache 用
+sudo yum list installed | grep httpd
+sudo systemctl status httpd
+curl host:80
+
+Tomcat 用
+sudo yum list installed | grep tomcat
+sudo yum list installed | grep tomcat-webapps
+sudo systemctl status tomcat
+curl host:8080
+
+
+
