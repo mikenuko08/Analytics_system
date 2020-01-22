@@ -108,7 +108,6 @@ https://github.com/gitbucket/gitbucket/releases/download/4.8/gitbucket.war
 
     http://ip_address:8080/gitbucket/
 
-<img src="img/tomcat_gitbucket.png">
 <img src="img/gitbucket_top.png">
 
 ## 3. リバースプロキシの設定を行う(Apache と Tomcat の連携設定)
