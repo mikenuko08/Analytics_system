@@ -58,7 +58,7 @@
 
     http://ip_address/
 
-![Apacheのサンプルページ](img/apache_sample)
+<img src="img/apache_sample.png">
 
 # Exercise2 　 Gitbucket
 
@@ -90,6 +90,8 @@
 
     curl ip_address:8080
 
+<img src="img/tomcat_sample.png">
+
 ## 2. gitbucket のファイルをダウンロードする
 
 ### gitbucket のファイルをダウンロードする前にファイルを配置するためのディレクトリに移動してもらう. 配置先のディレクトリは、/var/lib/tomcat/webapps/である.
@@ -105,6 +107,9 @@ https://github.com/gitbucket/gitbucket/releases/download/4.8/gitbucket.war
 ### ブラウザで以下の URL にアクセスし，以下のような画面が表示されていれば接続が成功
 
     http://ip_address:8080/gitbucket/
+
+<img src="img/tomcat_gitbucket.png">
+<img src="img/gitbucket_top.png">
 
 ## 3. リバースプロキシの設定を行う(Apache と Tomcat の連携設定)
 
@@ -123,6 +128,8 @@ https://github.com/gitbucket/gitbucket/releases/download/4.8/gitbucket.war
 ### ブラウザで以下の URL にアクセスし，以下のような画面が表示されていれば接続が成功
 
     http://ip_address/gitbucket/
+
+<img src="img/gitbucket_top.png">
 
 # Exercise3 　 pukiwiki
 
@@ -166,3 +173,5 @@ https://github.com/gitbucket/gitbucket/releases/download/4.8/gitbucket.war
 ## ブラウザで以下の URL にアクセスし，以下のような画面が表示されていれば接続が成功
 
     http://ip_address/pikiwiki/
+
+<img src="img/pukiwiki.png">
