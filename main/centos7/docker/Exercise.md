@@ -26,8 +26,6 @@
 
 ### パッケージ量が非常に多いため，grep 等を用いて絞り込む必要がある．
 
-###
-
 ## 2. Apache の操作方法
 
 ### インストールが完了したら Apache を起動するコマンドを実行する．また以下に Apache の動作に関する操作方法を記している．設定ファイルを編集した場合は再起動を行う必要がある．必要に応じて以下のコマンドを参考にしてほしい．
@@ -74,7 +72,7 @@
 
 ### Gitbucket は Java Servlet という仕組みで動作している．従って，この環境で Java が動作する必要がある．以下のコマンドを実行すると Java をインストールできる．
 
-    yum -y install java-1.8.0-openjdk-devel.x86_64
+    java-1.8.0-openjdk-devel.x86_64
 
 ## 1. Tomcat のセットアップ
 
@@ -82,7 +80,7 @@
 
 ### Tomcat と Tomcat のサンプルページのインストール
 
-    yum -y install tomcat tomcat-webapps
+    tomcat tomcat-webapps
 
 ### 続けて，以下のコマンドも実行する．
 
@@ -112,7 +110,7 @@ https://github.com/gitbucket/gitbucket/releases/download/4.8/gitbucket.war
 
 ## 3. リバースプロキシの設定を行う(Apache と Tomcat の連携設定)
 
-    echo "ProxyPass / ajp://localhost:8009/" > /etc/httpd/conf.d/proxy.conf
+    echo "ProxyPass ?(/ ajp://localhost:8009/") > /etc/httpd/conf.d/proxy.conf
     systemctl restart httpd
 
 # Exercise3 　 pukiwiki
@@ -123,7 +121,7 @@ https://github.com/gitbucket/gitbucket/releases/download/4.8/gitbucket.war
 
 ### pukiwiki は PHP で動作している．従って，この環境で PHP が動作する必要がある．以下のコマンドを実行すると PHP をインストールできる．
 
-    yum -y install php php-mbstring
+    php php-mbstring
 
 ## 2. PHP の設定ファイルをコピーしておく
 
@@ -139,20 +137,20 @@ https://github.com/gitbucket/gitbucket/releases/download/4.8/gitbucket.war
 
     systemclt restart httpd
 
-## 5.
+## 5. pukiwiki のファイルをダウンロードする
 
     cd /var/www/html
     wget "https://ja.osdn.net/frs/redir.php?m=iij&f=pukiwiki%2F69652%2Fpukiwiki-1.5.2_utf8.zip" -O pukiwiki.zip
 
-##
+## 6. zip ファイルを解凍して，zip ファイルの削除を行う
 
-    // yum -y install unzip
+    // unzip
     unzip pukiwiki.zip
     mv pukiwiki-1.5.2_utf8 pukiwiki
     rm -rf pukiwiki.zip
 
-##
+## 7. ディレクトリの所有者を apache に変更する
 
-    chown apache:apache pukiwiki
+    chown -r apache:apache pukiwiki
 
 # Exercise3 　 GROUP SESSION

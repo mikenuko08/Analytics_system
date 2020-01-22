@@ -1,0 +1,27 @@
+問題数　今のままで十分そう 誘導を減らせばいい
+
+簡単なコマンド(例えば、yum -y install など)を省いてググらせる
+gitbucketのリバースプロキシの設定の課題には誘導を追加する
+間違いを誘発させる為にタイピングする
+
+サーバ状況確認コマンド
+
+sudo yum list installed | grep httpd
+sudo systemctl status httpd
+curl ip_address/
+
+sudo yum list installed | grep java
+sudo yum list installed | grep tomcat
+sudo yum list installed | grep tomcat-webapp
+sudo systemctl status tomcat
+curl ip_address:8080/
+
+sudo find /var/lib/tomcat/webapps/gitbucket.war
+curl ip_address:8080/gitbucket/
+sudo find /etc/httpd/conf/conf.d/
+curl ip_address/gitbucket/
+
+sudo yum list installed | grep php
+sudo yum list installed | grep php-mbstring
+sudo find /etc/php.ini.org
+sudo find /var/www/html/pukiwiki/
