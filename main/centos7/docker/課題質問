@@ -25,3 +25,21 @@ sudo yum list installed | grep php
 sudo yum list installed | grep php-mbstring
 sudo find /etc/php.ini.org
 sudo find /var/www/html/pukiwiki/
+
+
+デプロイの意味がわからない場合がある
+
+基本的にいらない
+
+ipアドレス
+
+firewallが動作してるから消す
+
+
+？じゃないよpukiwikiの部分
+
+pukiwikiのURLがpikiwikiになっている
+
+
+先生にもう一度コピー頼む
+

@@ -61,6 +61,8 @@ def check_server_status(key, st, host_addr, group):
             elif run_type == "run_local_cmd":
                 pattern = re.compile(r'ip_address')
                 command = pattern.sub(h, command)
+                print("command : ", end="")
+                print(command)
                 df = run_local_cmd(id, df, h, group, c, command, command_id)
             print()
         except:

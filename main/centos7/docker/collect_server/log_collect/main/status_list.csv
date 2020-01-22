@@ -1,19 +1,19 @@
 command_id,run_type,command
-step1-1,run_local_cmd,yum list installed | grep httpd
-step1-2,run_local_cmd,systemctl status httpd
-step1-3,run_server_cmd,curl ip_address
+step1-1,run_server_cmd,yum list installed | grep httpd
+step1-2,run_server_cmd,systemctl status httpd
+step1-3,run_local_cmd,curl ip_address
 
-step2-1,run_local_cmd,yum list installed | grep java
-step2-2,run_local_cmd,yum list installed | grep tomcat
-step2-3,run_local_cmd,yum list installed | grep tomcat-webapp
-step2-4,run_local_cmd,systemctl status tomcat
-step2-5,run_server_cmd,curl ip_address:8080/
-step2-6,run_local_cmd,find /var/lib/tomcat/webapps/gitbucket.war
-step2-7,run_server_cmd,curl ip_address:8080/gitbucket/
-step2-8,run_local_cmd,find /etc/httpd/conf/conf.d/
-step2-9,run_server_cmd,curl ip_address/gitbucket/
+step2-1,run_server_cmd,yum list installed | grep java
+step2-2,run_server_cmd,yum list installed | grep tomcat
+step2-3,run_server_cmd,yum list installed | grep tomcat-webapp
+step2-4,run_server_cmd,systemctl status tomcat
+step2-5,run_local_cmd,curl ip_address:8080/
+step2-6,run_server_cmd,find /var/lib/tomcat/webapps/gitbucket.war
+step2-7,run_local_cmd,curl ip_address:8080/gitbucket/
+step2-8,run_server_cmd,find /etc/httpd/conf/conf.d/
+step2-9,run_local_cmd,curl ip_address/gitbucket/
 
-step3-1,run_local_cmd,yum list installed | grep php
-step3-2,run_local_cmd,yum list installed | grep php-mbstring
-step3-3,run_local_cmd,find /etc/php.ini.org
-step3-4,run_local_cmd,find /var/www/html/pukiwiki/
+step3-1,run_server_cmd,yum list installed | grep php
+step3-2,run_server_cmd,yum list installed | grep php-mbstring
+step3-3,run_server_cmd,find /etc/php.ini.org
+step3-4,run_server_cmd,find /var/www/html/pukiwiki/

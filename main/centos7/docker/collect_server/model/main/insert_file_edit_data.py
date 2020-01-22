@@ -12,7 +12,7 @@ db_name = 'students'
 db_col_fileEdit = 'file_edit'
 
 # gitbacketのIPアドレス
-gitbucket = '192.168.0.2'
+gitbucket = '150.89.223.122'
 
 
 # git.tar.gzファイルを展開する

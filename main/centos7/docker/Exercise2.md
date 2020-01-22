@@ -2,9 +2,9 @@
 
 ## 演習概要
 
-- ### 今回の演習課題を通して，2 種類の Web アプリケーションのデプロイを行う．演習の流れとしては，まず Web サーバである Apache のセットアップを行い各アプリケーションを動作させる為の環境の設定，アプリケーションのデプロイを行うという流れになっている．
+- ### 2 種類の Web アプリケーションを動作させる課題を行う．演習の流れとしては，まず Web サーバである Apache のセットアップを行い，各アプリケーションを動作させる為の環境の設定，アプリケーションのデプロイ(適切な位置にファイルを配置する)を行うという流れになっている．
 
-- ### 演習課題は基本的に Google で検索して OK
+- ### 実行するコマンドは Google で検索して良い．ただし，コマンドは手動で打ち込むこと．
 
 - ### 演習時間は 100 分
 
@@ -24,21 +24,21 @@
 
 ## 2. Apache の操作方法
 
-### CentOS7 では，systemclt コマンドでソフトウェアの操作を行うことができる．インストールが完了したら 以下に示した Apache を起動するコマンドを実行する．Apache は設定ファイルを編集した場合，再起動を行う必要がある．必要に応じて以下のコマンドを参考にしてほしい．
+### CentOS7 では，systemclt コマンドでソフトウェアの操作を行うことができる．インストールが完了したら 以下に示した ソフトウェア を起動するコマンドを実行する．Apache は設定ファイルを編集した場合，再起動を行う必要がある．必要に応じて以下のコマンドを参考にしてほしい．
 
-### 起動
+### ソフトウェアの起動
 
     systemclt start ソフトウェア名
 
-### 停止
+### ソフトウェアの停止
 
     systemctl stop ソフトウェア名
 
-### 再起動
+### ソフトウェアの再起動
 
     systemctl restart ソフトウェア名
 
-### 状態確認
+### ソフトウェアの状態確認
 
     systemctl status ソフトウェア名
 
@@ -56,7 +56,9 @@
 
 ### ブラウザで以下の URL にアクセスし，以下のような画面が表示されていれば接続が成功
 
-    http://localhost/
+    http://ip_address/
+
+![Apacheのサンプルページ](img/apache_sample)
 
 # Exercise2 　 Gitbucket
 
@@ -86,7 +88,7 @@
 
 ### ブラウザで以下の URL にアクセスし，以下のような画面が表示されていれば接続が成功
 
-    curl localhost:8080
+    curl ip_address:8080
 
 ## 2. gitbucket のファイルをダウンロードする
 
@@ -102,7 +104,7 @@ https://github.com/gitbucket/gitbucket/releases/download/4.8/gitbucket.war
 
 ### ブラウザで以下の URL にアクセスし，以下のような画面が表示されていれば接続が成功
 
-    http://localhost:8080/gitbucket/
+    http://ip_address:8080/gitbucket/
 
 ## 3. リバースプロキシの設定を行う(Apache と Tomcat の連携設定)
 
@@ -120,7 +122,7 @@ https://github.com/gitbucket/gitbucket/releases/download/4.8/gitbucket.war
 
 ### ブラウザで以下の URL にアクセスし，以下のような画面が表示されていれば接続が成功
 
-    http://localhost/gitbucket/
+    http://ip_address/gitbucket/
 
 # Exercise3 　 pukiwiki
 
@@ -157,10 +159,10 @@ https://github.com/gitbucket/gitbucket/releases/download/4.8/gitbucket.war
     (ファイル名変更コマンド) pukiwiki-1.5.2_utf8 pukiwiki
     (ファイル削除コマンド) pukiwiki.zip
 
-## 7. ディレクトリの所有者を apache に変更する．?に当てはまる部分を調べる．
+## 7. ディレクトリの所有者を apache に変更する．所有者変更コマンドは各自調べる．
 
     (所有者変更コマンド) pukiwiki
 
 ## ブラウザで以下の URL にアクセスし，以下のような画面が表示されていれば接続が成功
 
-    http://localhost/pikiwiki/
+    http://ip_address/pikiwiki/
