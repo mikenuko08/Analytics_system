@@ -98,7 +98,7 @@
 
 ### インターネットからソフトをダウンロードする際に利用できるコマンドとして代表的なものに wget がある. 以下に基本的な使い方を示す.
 
-    wget ダウンロードしたいファイルのURL
+    wget（ダウンロードしたいファイルのURL)
 
 ### 今回構築したい gitbucket のファイルは以下の URL にある
 
@@ -157,11 +157,15 @@ https://github.com/gitbucket/gitbucket/releases/download/4.8/gitbucket.war
 ## 5. pukiwiki のファイルをダウンロードする
 
     cd /var/www/html
-    wget "https://ja.osdn.net/frs/redir.php?m=iij&f=pukiwiki%2F69652%2Fpukiwiki-1.5.2_utf8.zip" -O pukiwiki.zip
+    wget (ダウンロードしたいファイルのURL)
 
-## 6. zip ファイルを解凍して，zip ファイルの削除を行う．コマンドは各自調べる．
+### 今回構築したい pukiwiki のファイルは以下の URL にある
 
-    (zipファイル解凍コマンド) pukiwiki.zip
+https://ja.osdn.net/frs/redir.php?m=iij&f=pukiwiki%2F69652%2Fpukiwiki-1.5.2_utf8.zip
+
+## 6. zip ファイルを解凍して，zip ファイルの削除を行う．コマンドは各自調べる．ソフトがなければ探してインストールする．
+
+    (zipファイル解凍コマンド) pukiwiki-1.5.2_utf8.zip
     (ファイル名変更コマンド) pukiwiki-1.5.2_utf8 pukiwiki
     (ファイル削除コマンド) pukiwiki.zip
 
