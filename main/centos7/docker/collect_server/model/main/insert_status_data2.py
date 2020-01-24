@@ -311,9 +311,8 @@ def main(argv):
     #analysis_field1 = 'stdout'
     analysis_field2 = 'stderr'
 
-    #insert_analysisStatus_data(
-    #    status_col, status_analysis_col, analysis_field1, file_path)
-    insert_analysisStatus_data(status_col, status_analysis_col, analysis_field2, file_path)
+    insert_analysisStatus_data(status_col, status_analysis_col, analysis_field1, file_path)
+    # insert_analysisStatus_data(status_col, status_analysis_col, analysis_field2, file_path)
 
 
 if __name__ == '__main__':

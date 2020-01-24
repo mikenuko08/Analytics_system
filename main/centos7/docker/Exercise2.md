@@ -52,6 +52,12 @@
 
     systemctl disable ソフトウェア名
 
+## 3. ファイアウォール  の解除
+
+### CentOS7 のファイアウォールのソフトウェア名は firewalld である．
+
+    (停止コマンド) ソフトウェア名
+
 ## 3. 動作確認方法
 
 ### ブラウザで以下の URL にアクセスし，以下のような画面が表示されていれば接続が成功
@@ -114,11 +120,26 @@ https://github.com/gitbucket/gitbucket/releases/download/4.8/gitbucket.war
 
 ### プロキシとは
 
+### インターネット接続を行う際に，直接自分のサーバをインターネットにアクセスさせるのではなく，代理サーバにアクセスさせることでセキュリティ面や，コンテンツのキャッシュなどが可能になる
+
+<img src="img/proxy.png">
+
 ### リバースプロキシとは
 
-### Apache の設定ファイルに Apache のサーバにアクセスがあった場合，Tomcat のページに接続できるように設定を行う．Apache の設定ファイルは/etc/httpd/conf/httpd.conf に追記するか，/etc/httpd/conf.d/以下に proxy.conf ファイルを作成し，以下のキーワードを記述する．パラメータの部分については Google 等で調べて欲しい．
+### リバースプロキシはWebサーバ側に設置するプロキシサーバのことであり，ロードバランサ(負荷分散機能)や画像ファイル等のキャッシュなどが可能になる．
 
-    ProxyPass (パラメータ)
+<img src="img/reverse_proxy.png">
+
+
+###  詳しくは以下のリンクを参照
+https://itsakura.com/network-proxy
+
+### Apache のサーバにアクセスがあった場合，Tomcat のページに接続できるように Apache の設定を行う．Apache の設定ファイルは/etc/httpd/conf/httpd.conf に追記するか，/etc/httpd/conf.d/以下に proxy.conf ファイルを作成し，以下のキーワードを記述する．パラメータの部分については Google 等で調べて欲しい．
+
+    <Location /gitbucket/>
+        ProxyPass (パラメータ)
+    </Location>
+    
 
 ### 設定が完了したら Apache を再起動
 

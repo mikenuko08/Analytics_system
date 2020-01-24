@@ -259,6 +259,8 @@
             var pat = '[&#x27;';
             var pat2 = '\x1b[?1034h';
             var pat3 = '&#x27;]';
+            var pat4 = '\x1b[0m';
+            var pat5 = '\x1b[38;5;27';
 
             str = str.replace(pat, '');
             str = str.replace(pat2, '');
@@ -298,8 +300,8 @@
             var now_time = command_history[i]['time_before_execution'];
             var next_time = command_history[i + 1]['time_before_execution'];
 
-            for (let j = 0; j < file_edit.length; j++) {
-
+            
+            for (let j = 0; j < command_script.length; j++){
                 var cs_time = command_script[j]['executed_time'];
 
                 if (now_time <= cs_time && next_time >= cs_time) {
@@ -307,7 +309,9 @@
                     cs = pattern_replace(cs);
                     command_history[i]['executed_result'] = cs;
                 }
+            }
 
+            for (let j = 0; j < file_edit.length; j++) {
                 var fi_time = file_edit[j]['committed_date'];
                 var fi_id = file_edit[j]['id'];
                 var fi_hexsha = file_edit[j]['hexsha'];

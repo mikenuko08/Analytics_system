@@ -24,6 +24,7 @@ cron.monthly
 cron.weekly
 crontab
 crypttab
+chrony*
 csh.cshrc
 csh.login
 dbus-1
