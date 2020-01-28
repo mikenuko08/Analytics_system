@@ -92,7 +92,7 @@
 
 ### Tomcat と Tomcat-webapps のインストール
 
-    (インストールコマンド) tomcat
+    (インストールコマンド) tomcat tomcat-webapps
 
 ### インストールが完了したら，Apache と同様に起動コマンドを実行する．
 
@@ -198,7 +198,6 @@ https://ja.osdn.net/frs/redir.php?m=iij&f=pukiwiki%2F69652%2Fpukiwiki-1.5.2_utf8
 ## 6. zip ファイルを解凍して，zip ファイルの削除を行う．コマンドは各自調べる．ソフトがなければ探してインストールする．
 
     (zipファイル解凍コマンド) pukiwiki-1.5.2_utf8.zip
-    (ファイル名変更コマンド) pukiwiki-1.5.2_utf8 pukiwiki
     (ファイル削除コマンド) pukiwiki.zip
 
 ## 7. ディレクトリの所有者を apache に変更する．所有者変更コマンドは各自調べる．

@@ -43,3 +43,10 @@ pukiwikiのURLがpikiwikiになっている
 
 先生にもう一度コピー頼む
 
+
+学生1 httpdをhttpに変更
+学生2 tomcat-webappsを表記していない
+学生3 firewallが動作してるから消す
+学生4 pukiwikiのデプロイ先
+学生5 pukiwikiのダウンロードディレクトリ名を変更させる
+学生6 phpインストール後再起動させない

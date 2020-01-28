@@ -64,13 +64,9 @@
 
     systemctl disable ソフトウェア名
 
-## 3. ファイアウォールの解除
+### ファイアウォールの解除 CentOS7 のファイアウォールのを停止させる必要がある．
 
-### CentOS7 のファイアウォールのソフトウェア名は firewalld である．
-
-    (停止コマンド) ソフトウェア名
-
-## 4. 動作確認方法
+## 3. 動作確認方法
 
 ### ブラウザで以下の URL にアクセスし，以下のような画面が表示されていれば接続が成功
 
@@ -92,7 +88,7 @@
 
 ### Tomcat と Tomcat-webapps のインストール
 
-    (インストールコマンド) tomcat
+    (インストールコマンド) tomcat tomcat-webapps
 
 ### インストールが完了したら，Apache と同様に起動コマンドを実行する．
 
@@ -106,7 +102,7 @@
 
 ### ブラウザで以下の URL にアクセスし，以下のような画面が表示されていれば接続が成功
 
-    curl ip_address:8080
+    http://ip_address:8080/
 
 <img src="img/tomcat_sample.png">
 
@@ -168,7 +164,7 @@ https://itsakura.com/network-proxy
 
 ### pukiwiki は PHP で動作している．従って，この環境で PHP が動作する必要がある．以下のソフトウェアを yum を用いてインストールしてください．
 
-    (インストールコマンド) php php-mbstring
+    (インストールコマンド) php
 
 ## 2. PHP の設定ファイルをコピーしておく
 

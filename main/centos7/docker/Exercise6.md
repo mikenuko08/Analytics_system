@@ -92,7 +92,7 @@
 
 ### Tomcat と Tomcat-webapps のインストール
 
-    (インストールコマンド) tomcat
+    (インストールコマンド) tomcat tomcat-webapps
 
 ### インストールが完了したら，Apache と同様に起動コマンドを実行する．
 
@@ -177,16 +177,12 @@ https://itsakura.com/network-proxy
     cd /etc
     (ファイルコピーコマンド) php.ini php.ini.org
 
-## 3. PHP の設定ファイルを編集する
+## 3. PHP の設定ファイルを編集する(設定後再読み込みを行う)
 
     vi php.ini
     date.timezone = Asia/Tokyo
 
-## 4. PHP の設定を読み込ませるために，Apache の再起動を行う．
-
-    (再起動のコマンド) httpd
-
-## 5. pukiwiki のファイルをダウンロードする
+## 4. pukiwiki のファイルをダウンロードする
 
     cd /var/www/html
     wget (ダウンロードしたいファイルのURL)
@@ -195,13 +191,13 @@ https://itsakura.com/network-proxy
 
 https://ja.osdn.net/frs/redir.php?m=iij&f=pukiwiki%2F69652%2Fpukiwiki-1.5.2_utf8.zip
 
-## 6. zip ファイルを解凍して，zip ファイルの削除を行う．コマンドは各自調べる．ソフトがなければ探してインストールする．
+## 5. zip ファイルを解凍して，zip ファイルの削除を行う．コマンドは各自調べる．ソフトがなければ探してインストールする．
 
     (zipファイル解凍コマンド) pukiwiki-1.5.2_utf8.zip
     (ファイル名変更コマンド) pukiwiki-1.5.2_utf8 pukiwiki
     (ファイル削除コマンド) pukiwiki.zip
 
-## 7. ディレクトリの所有者を apache に変更する．所有者変更コマンドは各自調べる．
+## 6. ディレクトリの所有者を apache に変更する．所有者変更コマンドは各自調べる．
 
     (所有者変更コマンド) pukiwiki
 

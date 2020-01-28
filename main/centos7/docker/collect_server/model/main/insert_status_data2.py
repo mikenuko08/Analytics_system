@@ -17,26 +17,26 @@ collection2 = "status_analysis"
 
 
 def analysis_init(file_path):
-        file_path_list = file_path.split('/')
-        # ファイルパスが特定の要素数あるファイルのみを分析処理にかける
-        if (len(file_path_list) == 6):
-            # ファイル名をfile_path_listから抽出
-            file_name = file_path_list[-1]
-            # ファイル名を分割してcollection_timeを抽出
-            file_name_list = file_name.split('.')
-            # print(file_name_list)
-            collection_time_str = file_name_list[0]
-            # print(unixtime_str)
-            try:   
-                collection_time = int(collection_time_str)
-                print('collection_time: ', end="")
-                print(collection_time)
-                return collection_time
-            except ValueError as error:
-                print("Value Error")
-                sys.exit()
-        else:
+    file_path_list = file_path.split('/')
+    # ファイルパスが特定の要素数あるファイルのみを分析処理にかける
+    if (len(file_path_list) == 6):
+        # ファイル名をfile_path_listから抽出
+        file_name = file_path_list[-1]
+        # ファイル名を分割してcollection_timeを抽出
+        file_name_list = file_name.split('.')
+        # print(file_name_list)
+        collection_time_str = file_name_list[0]
+        # print(unixtime_str)
+        try:
+            collection_time = int(collection_time_str)
+            print('collection_time: ', end="")
+            print(collection_time)
+            return collection_time
+        except ValueError as error:
+            print("Value Error")
             sys.exit()
+    else:
+        sys.exit()
 
 
 def insert_status_data(status_col, file_path):
@@ -221,6 +221,10 @@ def insert_analysisStatus_data(status_col, status_analysis_col, analysis_field, 
         pre_clustering = data_analysis(student_num, pre_list)
         print(pre_clustering)
 
+        for i, (leatest_result, pre_result) in enumerate(zip(leatest_list, pre_list)):
+            if leatest_result == pre_result:
+                leatest_clustering[i] = pre_clustering[i]
+
         ##### 3. 最新と一つ前のののクラスタリングデータを比較し、違いがあればupdateTimeを変更 #####
 
         print('update_time')
@@ -269,6 +273,7 @@ def insert_analysisStatus_data(status_col, status_analysis_col, analysis_field, 
         max_index = -1
         for i, cnt in enumerate(clustering_cnt):
             if i != min_index and cnt > max_v:
+                max_v = cnt
                 max_index = i
 
         # 4-4. min_index, max_indexをもとに分析結果を記録
@@ -311,7 +316,8 @@ def main(argv):
     #analysis_field1 = 'stdout'
     analysis_field2 = 'stderr'
 
-    insert_analysisStatus_data(status_col, status_analysis_col, analysis_field1, file_path)
+    insert_analysisStatus_data(
+        status_col, status_analysis_col, analysis_field1, file_path)
     # insert_analysisStatus_data(status_col, status_analysis_col, analysis_field2, file_path)
 
 

@@ -272,12 +272,13 @@ def insert_analysisStatus_data(status_col, status_analysis_col, analysis_field, 
 
         # 4-2. 平均値が最も低いグループを課題が進んでいないグループとして記録
         min_index = update_time_average.index(min(update_time_average))
-
+        print(min_index)
         # 4-3. min_indexを除く要素で最も要素数が多い添字をmax_indexに記録
         max_v = -1
         max_index = -1
         for i, cnt in enumerate(clustering_cnt):
             if i != min_index and cnt > max_v:
+                max_v
                 max_index = i
 
         # 4-4. min_index, max_indexをもとに分析結果を記録

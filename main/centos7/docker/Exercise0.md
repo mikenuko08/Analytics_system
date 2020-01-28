@@ -92,7 +92,7 @@
 
 ### Tomcat と Tomcat-webapps のインストール
 
-    (インストールコマンド) tomcat
+    (インストールコマンド) tomcat tomcat-webapps
 
 ### インストールが完了したら，Apache と同様に起動コマンドを実行する．
 

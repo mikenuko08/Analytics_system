@@ -92,7 +92,7 @@
 
 ### Tomcat と Tomcat-webapps のインストール
 
-    (インストールコマンド) tomcat
+    (インストールコマンド) tomcat tomcat-webapps
 
 ### インストールが完了したら，Apache と同様に起動コマンドを実行する．
 
@@ -188,7 +188,6 @@ https://itsakura.com/network-proxy
 
 ## 5. pukiwiki のファイルをダウンロードする
 
-    cd /var/www/html
     wget (ダウンロードしたいファイルのURL)
 
 ### 今回構築したい pukiwiki のファイルは以下の URL にある

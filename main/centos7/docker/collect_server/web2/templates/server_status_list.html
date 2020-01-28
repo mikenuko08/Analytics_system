@@ -265,7 +265,7 @@
             // console.log(data2['leatest_clustering'])
             if (row['analysis'] == 0) {
                 return {
-                    classes: 'bg-warning'
+                    classes: ''
                 }
             } else if (row['analysis'] == 1) {
                 return {
@@ -273,11 +273,8 @@
                 }
             } else if (row['analysis'] == 2) {
                 return {
-                    classes: 'bg-green'
+                    classes: 'bg-warning'
                 }
-            }
-            return {
-                classes: ''
             }
         }
 
@@ -356,7 +353,7 @@
                     min: 0,
                     max: collection_time.length - 1,
                     step: 1,
-                    value: 0
+                    value: collection_time.length - 1
                 });
                 $('#collection_time').html(timeFormatter(collection_time[0]));
 
